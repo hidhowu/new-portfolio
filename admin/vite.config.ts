@@ -28,6 +28,7 @@ export default defineConfig({
     },
     allowedHosts: ["admin.cheapr.cc"],
   },
+  base: "/admin/",
   build: {
     outDir: "../public/admin",
     emptyOutDir: true,
