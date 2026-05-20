@@ -1,40 +1,140 @@
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="nav-logo" href="/">
-      <% const _navLogo = (typeof hero !== 'undefined' && hero && hero.logoUrl) || (typeof footer !== 'undefined' && footer && footer.logoUrl) || null; %>
-      <% if (_navLogo) { %>
-        <img src="<%= _navLogo %>" alt="Josh Studios" />
+<%
+  const _nav = (typeof nav !== 'undefined' && nav) ? nav : {};
+  const _hero = (typeof hero !== 'undefined' && hero) ? hero : {};
+  const _about = (typeof about !== 'undefined' && about) ? about : {};
+  const _cta = (typeof cta !== 'undefined' && cta) ? cta : {};
+  const _mm = (typeof mobileMenu !== 'undefined' && mobileMenu) ? mobileMenu : {};
+  const _socials = (typeof socialLinks !== 'undefined' && Array.isArray(socialLinks)) ? socialLinks : [];
+  const _featuredProject = (typeof featuredProject !== 'undefined') ? featuredProject : null;
+  const _recentPost = (typeof recentPost !== 'undefined') ? recentPost : null;
+
+  const defaultLinks = [
+    { label: 'Home', href: '/#home' },
+    { label: 'About', href: '/#about' },
+    { label: 'Services', href: '/#services' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Skills', href: '/#skills' },
+    { label: 'Blog', href: '/blog' },
+  ];
+  const links = (Array.isArray(_nav.links) && _nav.links.length)
+    ? _nav.links.filter(l => l && l.isActive !== false)
+    : defaultLinks;
+
+  const bookHref = _cta.buttonHref || '#contact';
+  const isExternal = bookHref && !bookHref.startsWith('#') && !bookHref.startsWith('/');
+
+  const logoUrl = _hero.logoUrl || (typeof footer !== 'undefined' && footer && footer.logoUrl) || null;
+
+  const aboutBlurb = ((_about.lines || []).slice(0, 2) || []).join(' ');
+  const heroProfile = _hero.profileImageUrl || null;
+  const mobileProfile = _mm.profileImageUrl || _hero.mobileProfileImageUrl || heroProfile;
+
+  const mmBg = _mm.backgroundColor || '#E8F5EC';
+  const widgetCfg = (Array.isArray(_mm.widgets) && _mm.widgets.length) ? _mm.widgets : [
+    { id: 'about', enabled: true },
+    { id: 'links', enabled: true },
+    { id: 'featuredWork', enabled: true },
+    { id: 'latestBlog', enabled: true },
+    { id: 'socials', enabled: true },
+    { id: 'cta', enabled: true },
+  ];
+  const isWidgetEnabled = (id) => {
+    const w = widgetCfg.find((x) => x && x.id === id);
+    return w ? w.enabled !== false : true;
+  };
+
+  function hexToRgba(hex, alpha) {
+    if (!hex || typeof hex !== 'string') return 'rgba(247,246,242,' + alpha + ')';
+    let h = hex.replace('#', '').trim();
+    if (h.length === 3) h = h.split('').map(c => c + c).join('');
+    if (h.length !== 6) return 'rgba(247,246,242,' + alpha + ')';
+    const r = parseInt(h.slice(0,2), 16);
+    const g = parseInt(h.slice(2,4), 16);
+    const b = parseInt(h.slice(4,6), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+%>
+<nav class="site-nav" id="site-nav">
+  <div class="site-nav-inner">
+    <a class="site-nav-logo" href="/">
+      <% if (logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Logo" />
       <% } else { %>
-        <span class="nav-logo-text">Josh Studios</span>
+        <span class="site-nav-logo-text">Josh Studios</span>
       <% } %>
     </a>
-    <div class="nav-links">
-      <% const links = nav.links || [
-        {label:'Home', href:'/#home'},
-        {label:'About', href:'/#about'},
-        {label:'Services', href:'/#services'},
-        {label:'Projects', href:'/projects'},
-        {label:'Skills', href:'/#skills'},
-        {label:'Blog', href:'/blog'}
-      ]; %>
-      <% links.filter(l => l.isActive !== false).forEach(link => { %>
-        <a href="<%= link.href %>"><%= link.label %></a>
+    <ul class="site-nav-links">
+      <% links.forEach((l) => { %>
+        <li><a href="<%= l.href %>"><%= l.label %></a></li>
       <% }) %>
-      <a class="nav-cta" href="/#contact">Book a Call</a>
+    </ul>
+    <div class="site-nav-right">
+      <a class="site-nav-cta" href="<%= bookHref %>" <% if (isExternal) { %>target="_blank" rel="noopener"<% } %>>Book a Call</a>
+      <button class="site-nav-hamburger" id="site-nav-hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <button class="nav-mobile-btn" id="nav-mobile-open" aria-label="Open menu">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <rect y="4" width="22" height="2" rx="1" fill="currentColor"/>
-        <rect y="10" width="22" height="2" rx="1" fill="currentColor"/>
-        <rect y="16" width="22" height="2" rx="1" fill="currentColor"/>
-      </svg>
-    </button>
   </div>
 </nav>
-<div class="nav-mobile-menu" id="nav-mobile-menu">
-  <button class="nav-mobile-close" id="nav-mobile-close">&times;</button>
-  <% (nav.links || links).filter(l => l.isActive !== false).forEach(link => { %>
-    <a href="<%= link.href %>"><%= link.label %></a>
-  <% }) %>
-  <a class="btn-primary" href="/#contact">Book a Call</a>
+
+<div class="site-mobile-menu" id="site-mobile-menu" style="background:<%= hexToRgba(mmBg, 0.98) %>">
+  <div class="site-mobile-menu-inner">
+    <% widgetCfg.filter(w => w && w.enabled !== false).forEach((w) => { %>
+      <% if (w.id === 'about' && (aboutBlurb || mobileProfile)) { %>
+        <div class="mm-about-chip">
+          <div class="mm-about-avatar">
+            <% if (mobileProfile) { %>
+              <img src="<%= mobileProfile %>" alt="" />
+            <% } else { %>
+              <span>J</span>
+            <% } %>
+          </div>
+          <div class="mm-about-text">
+            <div class="mm-about-title">Hey, I'm Josh</div>
+            <div class="mm-about-blurb"><%= aboutBlurb || "Designer & developer building thoughtful digital products." %></div>
+          </div>
+        </div>
+      <% } else if (w.id === 'links') { %>
+        <div class="mm-links">
+          <% links.forEach((l) => { %>
+            <a href="<%= l.href %>"><span><%= l.label %></span><span class="mm-arrow">→</span></a>
+          <% }) %>
+        </div>
+      <% } else if (w.id === 'featuredWork' && _featuredProject) { %>
+        <div class="mm-section">
+          <div class="mm-eyebrow">Featured Work</div>
+          <a class="mm-feature-card" href="/projects/<%= _featuredProject.slug %>" style="background:<%= _featuredProject.coverColor || '#1a3a5a' %>">
+            <% if (_featuredProject.coverImageUrl) { %>
+              <img src="<%= _featuredProject.coverImageUrl %>" alt="<%= _featuredProject.title %>" />
+            <% } %>
+            <div class="mm-feature-overlay">
+              <div class="mm-feature-category"><%= _featuredProject.category %></div>
+              <div class="mm-feature-title"><%= _featuredProject.title %></div>
+            </div>
+          </a>
+        </div>
+      <% } else if (w.id === 'latestBlog' && _recentPost) { %>
+        <div class="mm-section">
+          <div class="mm-eyebrow">From the blog</div>
+          <a class="mm-blog-card" href="/blog/<%= _recentPost.slug %>">
+            <div class="mm-blog-tag"><%= _recentPost.category ? _recentPost.category.name : 'Article' %></div>
+            <div class="mm-blog-title"><%= _recentPost.title %></div>
+            <div class="mm-blog-meta">
+              <%= new Date(_recentPost.publishedAt || _recentPost.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %> · <%= _recentPost.readMinutes %> min read
+            </div>
+          </a>
+        </div>
+      <% } else if (w.id === 'socials' && _socials.length) { %>
+        <div class="mm-socials">
+          <% _socials.slice(0, 5).forEach((s) => { %>
+            <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+              <%- getSocialIcon(s.iconKey, 16, s.name) %>
+            </a>
+          <% }) %>
+        </div>
+      <% } else if (w.id === 'cta') { %>
+        <a class="mm-cta" href="<%= bookHref %>" <% if (isExternal) { %>target="_blank" rel="noopener"<% } %>>Book a Call</a>
+      <% } %>
+    <% }) %>
+  </div>
 </div>

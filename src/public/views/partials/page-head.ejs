@@ -59,4 +59,14 @@
   </style>
 </head>
 <body>
-<%- include('nav', { nav: typeof nav !== 'undefined' ? nav : {} }) %>
+<%- include('nav', {
+  nav: typeof nav !== 'undefined' ? nav : {},
+  hero: typeof hero !== 'undefined' ? hero : {},
+  about: typeof about !== 'undefined' ? about : {},
+  footer: typeof footer !== 'undefined' ? footer : {},
+  cta: typeof cta !== 'undefined' ? cta : {},
+  mobileMenu: typeof mobileMenu !== 'undefined' ? mobileMenu : {},
+  socialLinks: typeof socialLinks !== 'undefined' ? socialLinks : [],
+  featuredProject: typeof featuredProject !== 'undefined' ? featuredProject : null,
+  recentPost: typeof recentPost !== 'undefined' ? recentPost : null,
+}) %>

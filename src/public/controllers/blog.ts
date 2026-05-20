@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../../config/db';
 import { renderBlocks } from '../../utils/renderBlocks';
 import { normalizeMusic } from '../../utils/normalize-music';
+import { getPageBundle } from '../../utils/page-bundle';
 
 async function index(req: Request, res: Response) {
   try {
@@ -9,14 +10,10 @@ async function index(req: Request, res: Response) {
     const categorySlug = req.query.category as string;
     const pageSize = 9;
 
-    const [categories, navSetting, socialLinks, musicSetting, seoSetting, themeSetting, heroSetting] = await Promise.all([
+    const [bundle, categories, musicSetting] = await Promise.all([
+      getPageBundle(),
       prisma.blogCategory.findMany({ orderBy: { sortOrder: 'asc' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'nav' } }),
-      prisma.socialLink.findMany({ where: { isActive: true }, orderBy: { sortOrder: 'asc' } }),
       prisma.siteSetting.findUnique({ where: { key: 'music' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'seo' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'theme' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'hero' } }),
     ]);
 
     const categoryFilter = categorySlug
@@ -42,18 +39,14 @@ async function index(req: Request, res: Response) {
     ]);
 
     res.render('blog-index', {
+      ...bundle,
       posts,
       featuredPost,
       categories,
       currentCategory: categorySlug ?? 'all',
       page,
       totalPages: Math.ceil(total / pageSize),
-      nav: (navSetting?.value as any) ?? {},
-      socialLinks,
       music: normalizeMusic(musicSetting?.value),
-      seo: (seoSetting?.value as any) ?? {},
-      theme: (themeSetting?.value as any) ?? {},
-      hero: (heroSetting?.value as any) ?? {},
     });
   } catch (err) {
     console.error('Blog index error:', err);
@@ -64,17 +57,13 @@ async function index(req: Request, res: Response) {
 async function detail(req: Request, res: Response) {
   try {
     const { slug } = req.params;
-    const [post, navSetting, socialLinks, musicSetting, seoSetting, themeSetting, heroSetting] = await Promise.all([
+    const [bundle, post, musicSetting] = await Promise.all([
+      getPageBundle(),
       prisma.blogPost.findFirst({
         where: { slug, isPublished: true, deletedAt: null },
         include: { category: true },
       }),
-      prisma.siteSetting.findUnique({ where: { key: 'nav' } }),
-      prisma.socialLink.findMany({ where: { isActive: true }, orderBy: { sortOrder: 'asc' } }),
       prisma.siteSetting.findUnique({ where: { key: 'music' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'seo' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'theme' } }),
-      prisma.siteSetting.findUnique({ where: { key: 'hero' } }),
     ]);
 
     if (!post) return res.status(404).render('404', { message: 'Post not found' });
@@ -93,17 +82,12 @@ async function detail(req: Request, res: Response) {
 
     const contentHtml = renderBlocks(post.contentJson as any);
 
-    // Increment likes (simple counter — just expose on a separate endpoint in prod)
     res.render('blog-detail', {
+      ...bundle,
       post,
       contentHtml,
       relatedPosts,
-      nav: (navSetting?.value as any) ?? {},
-      socialLinks,
       music: normalizeMusic(musicSetting?.value),
-      seo: (seoSetting?.value as any) ?? {},
-      theme: (themeSetting?.value as any) ?? {},
-      hero: (heroSetting?.value as any) ?? {},
     });
   } catch (err) {
     console.error('Blog detail error:', err);

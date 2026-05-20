@@ -1,22 +1,26 @@
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <a class="footer-logo" href="/">
-        <% const _footerLogo = (typeof hero !== 'undefined' && hero && hero.logoUrl) || (footer && footer.logoUrl) || null; %>
-        <% if (_footerLogo) { %>
-          <img src="<%= _footerLogo %>" alt="Josh Studios" />
-        <% } else { %>
-          <span class="footer-logo-text">Josh Studios</span>
-        <% } %>
-      </a>
-      <div class="footer-socials">
-        <% socialLinks.forEach(link => { %>
-          <a class="footer-social" href="<%= link.url %>" target="_blank" rel="noopener" title="<%= link.name %>">
-            <%- getSocialIcon(link.iconKey) %>
-          </a>
-        <% }) %>
-      </div>
-      <p class="footer-copy"><%= footer.copyrightText || '© ' + new Date().getFullYear() + ' All rights reserved.' %></p>
+<%
+  const _hero = (typeof hero !== 'undefined' && hero) ? hero : {};
+  const _footer = (typeof footer !== 'undefined' && footer) ? footer : {};
+  const _socials = (typeof socialLinks !== 'undefined' && Array.isArray(socialLinks)) ? socialLinks : [];
+  const _logo = _hero.logoUrl || _footer.logoUrl || null;
+  const _copy = _footer.copyrightText || ('© ' + new Date().getFullYear() + ' All rights reserved.');
+%>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <a class="site-footer-logo" href="/">
+      <% if (_logo) { %>
+        <img src="<%= _logo %>" alt="Logo" />
+      <% } else { %>
+        <span>Josh Studios</span>
+      <% } %>
+    </a>
+    <div class="site-footer-socials">
+      <% _socials.forEach((s) => { %>
+        <a href="<%= s.url %>" target="_blank" rel="noopener" title="<%= s.name %>">
+          <%- getSocialIcon(s.iconKey, 18, s.name) %>
+        </a>
+      <% }) %>
     </div>
+    <p class="site-footer-copy"><%= _copy %></p>
   </div>
 </footer>

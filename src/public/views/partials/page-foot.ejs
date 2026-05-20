@@ -1,7 +1,8 @@
 <%- include('music-player', { music: typeof music !== 'undefined' ? music : {} }) %>
 <%- include('footer', {
   socialLinks: typeof socialLinks !== 'undefined' ? socialLinks : [],
-  footer: typeof footerSettings !== 'undefined' ? footerSettings : {}
+  footer: typeof footerSettings !== 'undefined' ? footerSettings : (typeof footer !== 'undefined' ? footer : {}),
+  hero: typeof hero !== 'undefined' ? hero : {},
 }) %>
 
 <div class="lightbox" id="lightbox">

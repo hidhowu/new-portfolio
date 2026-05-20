@@ -101,6 +101,21 @@ app.get('/blog/:slug', blogController.detail);
 app.get('/rss.xml', feedController.rss);
 app.get('/sitemap.xml', feedController.sitemap);
 
+// Public like increment for blog posts
+import { prisma as _prisma } from './config/db';
+app.post('/api/blog/posts/:id/like', express.json(), async (req, res) => {
+  try {
+    const post = await _prisma.blogPost.update({
+      where: { id: req.params.id },
+      data: { likes: { increment: 1 } },
+      select: { likes: true },
+    });
+    res.json({ likes: post.likes });
+  } catch {
+    res.status(404).json({ error: 'Post not found' });
+  }
+});
+
 // ─── Error handler ────────────────────────────────────────
 app.use(errorHandler);
 

@@ -37,6 +37,14 @@
   theme: typeof theme !== 'undefined' ? theme : {},
   seo: typeof seo !== 'undefined' ? seo : {},
   nav,
+  hero: typeof hero !== 'undefined' ? hero : {},
+  about: typeof about !== 'undefined' ? about : {},
+  footer: typeof footer !== 'undefined' ? footer : {},
+  cta: typeof cta !== 'undefined' ? cta : {},
+  mobileMenu: typeof mobileMenu !== 'undefined' ? mobileMenu : {},
+  socialLinks: typeof socialLinks !== 'undefined' ? socialLinks : [],
+  featuredProject: typeof featuredProject !== 'undefined' ? featuredProject : null,
+  recentPost: typeof recentPost !== 'undefined' ? recentPost : null,
   pageTitle: project.title,
   pageDesc: project.shortDesc,
   pageImage: project.coverImageUrl,
@@ -221,4 +229,4 @@
 
 </div>
 
-<%- include('partials/page-foot', { music, socialLinks, footerSettings: {}, extraScript: '<script src="/static/lightbox.js"></script>' }) %>
+<%- include('partials/page-foot', { music, socialLinks, footerSettings: typeof footer !== 'undefined' ? footer : {}, hero: typeof hero !== 'undefined' ? hero : {}, extraScript: '<script src="/static/lightbox.js"></script>' }) %>
