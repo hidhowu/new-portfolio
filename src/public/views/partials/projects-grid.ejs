@@ -1,0 +1,17 @@
+<% projects.forEach((project, i) => { %>
+  <a class="project-card <%= project.gridSize === 'TALL' ? 'tall' : project.gridSize === 'WIDE' ? 'wide' : '' %>" href="/projects/<%= project.slug %>" data-anim style="transition-delay: <%= (i % 3) * 0.08 %>s">
+    <div class="project-card-cover" style="background: linear-gradient(135deg, <%= project.coverColor || '#1a3a5a' %> 0%, <%= project.coverColor || '#2a5a8a' %>aa 100%)">
+      <% if (project.coverImageUrl) { %>
+        <img src="<%= project.coverImageUrl %>" alt="<%= project.title %>" loading="lazy" />
+      <% } %>
+      <div class="project-card-cover-color">
+        <span class="project-card-tag"><%= project.category %></span>
+      </div>
+    </div>
+    <div class="project-card-body">
+      <div class="project-card-category"><%= project.category %></div>
+      <h3 class="project-card-title"><%= project.title %></h3>
+      <p class="project-card-desc"><%= project.shortDesc %></p>
+    </div>
+  </a>
+<% }) %>

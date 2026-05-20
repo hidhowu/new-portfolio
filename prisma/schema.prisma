@@ -1,0 +1,266 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ADMIN USER ────────────────────────────────────────────────────────────────
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+
+  @@map("users")
+}
+
+// ─── SERVICES ─────────────────────────────────────────────────────────────────
+model ServiceCategory {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  iconUrl     String?
+  sortOrder   Int          @default(0)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  subservices Subservice[]
+  toolGroups  ToolGroup[]
+
+  @@map("service_categories")
+}
+
+model Subservice {
+  id          String          @id @default(cuid())
+  categoryId  String
+  category    ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  iconUrl     String?
+  externalUrl String?
+  sortOrder   Int             @default(0)
+  isActive    Boolean         @default(true)
+
+  @@map("subservices")
+}
+
+// ─── PROJECTS ─────────────────────────────────────────────────────────────────
+enum GridSize {
+  STD
+  WIDE
+  TALL
+}
+
+model Project {
+  id              String                @id @default(cuid())
+  slug            String                @unique
+  title           String
+  category        String
+  shortDesc       String
+  coverImageUrl   String?
+  coverColor      String?
+  client          String?
+  year            Int?
+  role            String?
+  duration        String?
+  videoUrl        String?
+  demoUrl         String?
+  isFeatured      Boolean               @default(false)
+  isPublished     Boolean               @default(false)
+  gridSize        GridSize              @default(STD)
+  sortOrder       Int                   @default(0)
+  challengeJson   Json?
+  approachJson    Json?
+  showImpact      Boolean               @default(true)
+  impactIntro     String?
+  spacingScale    Json?
+  publishedAt     DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  deletedAt       DateTime?
+  typography      ProjectTypography?
+  colors          ProjectColor[]
+  galleryImages   ProjectGalleryImage[]
+  impactMetrics   ProjectMetric[]
+  relatedProjects Project[]             @relation("RelatedProjects")
+  relatedBy       Project[]             @relation("RelatedProjects")
+
+  @@map("projects")
+}
+
+model ProjectTypography {
+  id            String  @id @default(cuid())
+  projectId     String  @unique
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fontFamily    String
+  customFontUrl String?
+  samples       Json
+
+  @@map("project_typography")
+}
+
+model ProjectColor {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label     String
+  hex       String
+  isPrimary Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  @@map("project_colors")
+}
+
+model ProjectGalleryImage {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  caption   String?
+  sortOrder Int     @default(0)
+
+  @@map("project_gallery_images")
+}
+
+model ProjectMetric {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  value     String
+  label     String
+  sortOrder Int     @default(0)
+
+  @@map("project_metrics")
+}
+
+// ─── BLOG ─────────────────────────────────────────────────────────────────────
+model BlogCategory {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  sortOrder Int        @default(0)
+  posts     BlogPost[]
+
+  @@map("blog_categories")
+}
+
+model BlogPost {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  excerpt       String
+  coverImageUrl String?
+  contentJson   Json          @default("{}")
+  categoryId    String?
+  category      BlogCategory? @relation(fields: [categoryId], references: [id])
+  isFeatured    Boolean       @default(false)
+  isPublished   Boolean       @default(false)
+  readMinutes   Int           @default(5)
+  likes         Int           @default(0)
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  @@map("blog_posts")
+}
+
+// ─── WORK EXPERIENCE ──────────────────────────────────────────────────────────
+model WorkExperience {
+  id          String  @id @default(cuid())
+  role        String
+  company     String
+  period      String
+  description String
+  logoUrl     String?
+  sortOrder   Int     @default(0)
+  isActive    Boolean @default(true)
+
+  @@map("work_experience")
+}
+
+// ─── SKILLS / TOOLS ───────────────────────────────────────────────────────────
+model ToolGroup {
+  id         String           @id @default(cuid())
+  categoryId String?
+  category   ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  name       String
+  sortOrder  Int              @default(0)
+  tools      Tool[]
+
+  @@map("tool_groups")
+}
+
+model Tool {
+  id        String    @id @default(cuid())
+  groupId   String
+  group     ToolGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  name      String
+  iconUrl   String?
+  sortOrder Int       @default(0)
+
+  @@map("tools")
+}
+
+// ─── GALLERY STRIP ────────────────────────────────────────────────────────────
+model GalleryStripItem {
+  id        String  @id @default(cuid())
+  imageUrl  String?
+  label     String
+  color     String?
+  row       Int     @default(0)
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  @@map("gallery_strip_items")
+}
+
+// ─── SITE SETTINGS (key-value singletons) ─────────────────────────────────────
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ─── SOCIAL LINKS ─────────────────────────────────────────────────────────────
+model SocialLink {
+  id        String  @id @default(cuid())
+  name      String
+  url       String
+  iconKey   String
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  @@map("social_links")
+}
+
+// ─── MEDIA ASSETS ─────────────────────────────────────────────────────────────
+enum MediaType {
+  IMAGE
+  SVG
+  FONT
+  AUDIO
+  VIDEO
+}
+
+model MediaAsset {
+  id           String    @id @default(cuid())
+  cloudinaryId String    @unique
+  url          String
+  type         MediaType
+  width        Int?
+  height       Int?
+  bytes        Int?
+  alt          String?
+  createdAt    DateTime  @default(now())
+
+  @@map("media_assets")
+}

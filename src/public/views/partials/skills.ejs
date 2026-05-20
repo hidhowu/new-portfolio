@@ -1,0 +1,30 @@
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-label">
+      <span class="dot"></span>
+      Skills & Tools
+      <span class="divider"></span>
+    </div>
+    <% toolGroups.forEach(group => { %>
+      <div class="skills-group" data-anim>
+        <div class="skills-group-header">
+          <span class="skills-dot"></span>
+          <span class="skills-group-title"><%= group.name %></span>
+          <span class="divider"></span>
+        </div>
+        <div class="skills-tags">
+          <% group.tools.forEach((tool, i) => { %>
+            <div class="skill-tag" data-anim style="transition-delay: <%= i * 0.04 %>s">
+              <% if (tool.iconUrl) { %>
+                <img src="<%= tool.iconUrl %>" alt="" width="18" height="18" />
+              <% } else { %>
+                <div class="skill-tag-icon-placeholder"></div>
+              <% } %>
+              <%= tool.name %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>

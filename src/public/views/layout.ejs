@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | Josh Studios' : 'Josh Studios' %></title>
+  <meta name="description" content="<%= typeof pageDesc !== 'undefined' ? pageDesc : 'Designer & developer building thoughtful digital products.' %>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/site.css" />
+  <% if (typeof extraStyle !== 'undefined') { %><style><%- extraStyle %></style><% } %>
+  <style>
+    :root {
+      --color-primary: <%= typeof theme !== 'undefined' && theme.primaryColor ? theme.primaryColor : '#1B6B2E' %>;
+      --font-primary: '<%= typeof theme !== 'undefined' && theme.fontFamily ? theme.fontFamily : 'DM Sans' %>', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/nav', { nav: typeof nav !== 'undefined' ? nav : {} }) %>
+
+  <%- body %>
+
+  <%- include('partials/music-player', { music: typeof music !== 'undefined' ? music : {} }) %>
+  <%- include('partials/footer', {
+    socialLinks: typeof socialLinks !== 'undefined' ? socialLinks : [],
+    footer: typeof footer !== 'undefined' ? footer : {}
+  }) %>
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+  </div>
+
+  <script src="/static/nav.js"></script>
+  <script src="/static/animations.js"></script>
+  <script src="/static/lightbox.js"></script>
+  <script src="/static/audio-bus.js"></script>
+  <% if (typeof extraScript !== 'undefined') { %><%- extraScript %><% } %>
+</body>
+</html>

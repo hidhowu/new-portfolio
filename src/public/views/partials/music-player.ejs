@@ -1,0 +1,23 @@
+<% const _tracks = (music && Array.isArray(music.tracks)) ? music.tracks.filter(t => t && t.trackUrl) : []; %>
+<% if (_tracks.length > 0) { %>
+<script>window.__pfMusic = <%- JSON.stringify(music) %>;</script>
+<script src="/static/music-queue.js"></script>
+<button class="music-mini" id="music-player" aria-label="Toggle music">
+  <svg class="music-ring" viewBox="0 0 44 44">
+    <circle cx="22" cy="22" r="20" />
+    <circle cx="22" cy="22" r="20" class="music-ring-progress" id="music-ring-progress" />
+  </svg>
+  <% if (_tracks[0].artUrl) { %>
+    <img class="music-mini-art" src="<%= _tracks[0].artUrl %>" alt="" />
+  <% } else { %>
+    <img class="music-mini-art" src="" alt="" style="display:none" />
+  <% } %>
+  <svg id="music-play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="8,4 20,12 8,20" />
+  </svg>
+  <svg id="music-pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+    <rect x="6" y="4" width="4" height="16" rx="1" />
+    <rect x="14" y="4" width="4" height="16" rx="1" />
+  </svg>
+</button>
+<% } %>

@@ -1,0 +1,45 @@
+<%- include('partials/page-head', {
+  theme: typeof theme !== 'undefined' ? theme : {},
+  seo: typeof seo !== 'undefined' ? seo : {},
+  nav: navSetting,
+  pageTitle: 'Projects',
+  pageDesc: 'All my design and development work.',
+  pagePath: '/projects'
+}) %>
+
+<section class="project-hero">
+  <div class="container">
+    <div class="section-label">
+      <span class="dot"></span>
+      Featured Work
+      <span class="divider"></span>
+    </div>
+    <h1 class="project-title" style="font-size:clamp(36px,6vw,64px)">All Projects</h1>
+    <p class="hero-subtitle">Every project is a chance to solve a real problem with clean, thoughtful work.</p>
+  </div>
+</section>
+
+<% if (stats && stats.length) { %>
+<section style="padding: 0 0 60px;">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px;">
+      <% stats.forEach(s => { %>
+        <div style="text-align:center;" data-anim>
+          <div style="font-size:36px;font-weight:800;color:var(--color-primary)"><%= s.value %></div>
+          <div style="font-size:13px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px"><%= s.label %></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="projects-grid">
+      <%- include('partials/projects-grid', { projects }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/page-foot', { music, socialLinks, footerSettings: {} }) %>

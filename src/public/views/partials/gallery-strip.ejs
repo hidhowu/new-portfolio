@@ -1,0 +1,20 @@
+<section class="gallery-strip">
+  <% [0, 1, 2].forEach(rowIdx => { %>
+    <% const rowItems = galleryRows[rowIdx] || []; %>
+    <% if (rowItems.length > 0) { %>
+      <div class="gallery-row">
+        <%# Duplicate items for seamless infinite scroll %>
+        <% [...rowItems, ...rowItems].forEach(item => { %>
+          <div class="gallery-item" style="background: linear-gradient(135deg, <%= item.color || '#1a3a4a' %> 0%, <%= item.color || '#2a5a6a' %>88 100%)">
+            <% if (item.imageUrl) { %>
+              <img src="<%= item.imageUrl %>" alt="<%= item.label %>" loading="lazy" />
+            <% } %>
+            <div class="gallery-item-color">
+              <span class="gallery-item-label"><%= item.label %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  <% }) %>
+</section>

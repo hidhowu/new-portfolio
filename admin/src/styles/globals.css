@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #F7F6F2;
+  color: #1A1A1A;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #E8E6E1; border-radius: 3px; }
+
+/* Editor.js resets */
+.codex-editor { font-family: 'DM Sans', sans-serif !important; }
+.ce-block__content { max-width: 100% !important; }
+.ce-toolbar__content { max-width: 100% !important; }

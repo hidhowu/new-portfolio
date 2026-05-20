@@ -1,0 +1,224 @@
+<%
+  const spacingScale = project.spacingScale || [{label:'4px',valuePx:4},{label:'8px',valuePx:8},{label:'16px',valuePx:16},{label:'24px',valuePx:24}];
+
+  // Normalize typography to {fonts, items} regardless of stored shape.
+  let typoFonts = [];
+  let typoItems = [];
+  if (project.typography) {
+    const raw = project.typography.samples;
+    if (Array.isArray(raw)) {
+      typoItems = raw;
+      typoFonts = [{ name: project.typography.fontFamily, url: project.typography.customFontUrl || null }];
+    } else if (raw && typeof raw === 'object') {
+      typoFonts = Array.isArray(raw.fonts) ? raw.fonts : [];
+      typoItems = Array.isArray(raw.items) ? raw.items : (Array.isArray(raw.samples) ? raw.samples : []);
+      if (!typoFonts.length && project.typography.fontFamily) {
+        typoFonts = [{ name: project.typography.fontFamily, url: project.typography.customFontUrl || null }];
+      }
+    }
+  }
+
+  let fontFaceStyle = '';
+  typoFonts.forEach(f => {
+    if (f && f.url) {
+      fontFaceStyle += `@font-face { font-family: '${f.name}'; src: url('${f.url}') format('woff2'); font-display: swap; }\n`;
+    }
+  });
+
+  function fontForSample(sample) {
+    if (sample && sample.fontName) {
+      const m = typoFonts.find(f => f && f.name === sample.fontName);
+      if (m) return m.name;
+    }
+    return (typoFonts[0] && typoFonts[0].name) || (project.typography && project.typography.fontFamily) || 'inherit';
+  }
+%>
+<%- include('partials/page-head', {
+  theme: typeof theme !== 'undefined' ? theme : {},
+  seo: typeof seo !== 'undefined' ? seo : {},
+  nav,
+  pageTitle: project.title,
+  pageDesc: project.shortDesc,
+  pageImage: project.coverImageUrl,
+  pagePath: '/projects/' + project.slug,
+  ogType: 'article',
+  extraStyle: fontFaceStyle
+}) %>
+
+<article class="project-hero">
+  <div class="container">
+    <div class="project-tag"><%= project.category %></div>
+    <h1 class="project-title"><%= project.title %></h1>
+    <div class="project-meta">
+      <% if (project.client) { %>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Client</span>
+          <span class="project-meta-value"><%= project.client %></span>
+        </div>
+      <% } %>
+      <% if (project.year) { %>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Year</span>
+          <span class="project-meta-value"><%= project.year %></span>
+        </div>
+      <% } %>
+      <% if (project.role) { %>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Role</span>
+          <span class="project-meta-value"><%= project.role %></span>
+        </div>
+      <% } %>
+      <% if (project.duration) { %>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Duration</span>
+          <span class="project-meta-value"><%= project.duration %></span>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</article>
+
+<% if (project.videoUrl) { %>
+<div class="container" style="margin-bottom:40px">
+  <div class="project-video">
+    <% if (project.videoUrl.includes('youtube') || project.videoUrl.includes('youtu.be') || project.videoUrl.includes('vimeo')) { %>
+      <iframe src="<%= project.videoUrl %>" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%"></iframe>
+    <% } else { %>
+      <video src="<%= project.videoUrl %>" controls style="width:100%;height:100%;object-fit:cover"></video>
+    <% } %>
+  </div>
+</div>
+<% } else if (project.coverImageUrl) { %>
+<div class="container" style="margin-bottom:40px">
+  <div style="aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:<%= project.coverColor || '#111' %>">
+    <img src="<%= project.coverImageUrl %>" alt="<%= project.title %>" style="width:100%;height:100%;object-fit:cover" />
+  </div>
+</div>
+<% } %>
+
+<% if (project.demoUrl) { %>
+<div class="container" style="margin-bottom:40px;text-align:center">
+  <a href="<%= project.demoUrl %>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--color-primary);color:#fff;padding:12px 28px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;transition:background 0.2s">
+    View Demo
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+      <polyline points="15 3 21 3 21 9"/>
+      <line x1="10" y1="14" x2="21" y2="3"/>
+    </svg>
+  </a>
+</div>
+<% } %>
+
+<div class="container">
+
+  <% if (project.challengeJson && project.challengeJson.blocks && project.challengeJson.blocks.length) { %>
+  <div class="project-content-section" data-anim>
+    <div class="project-content-label">Project Background</div>
+    <h2 class="project-content-title">The Challenge</h2>
+    <div class="project-content-body">
+      <%- renderBlocks(project.challengeJson) %>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (project.approachJson && project.approachJson.blocks && project.approachJson.blocks.length) { %>
+  <div class="project-content-section" data-anim>
+    <div class="project-content-label">Design Approach</div>
+    <h2 class="project-content-title">How We Built It</h2>
+    <div class="project-content-body">
+      <%- renderBlocks(project.approachJson) %>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (project.typography || (project.colors && project.colors.length)) { %>
+  <div class="project-content-section" data-anim>
+    <div class="project-content-label">Design System</div>
+    <h2 class="project-content-title">Typography & Colors</h2>
+    <div class="project-design-grid">
+      <% if (project.typography && typoItems.length) { %>
+      <div class="design-card">
+        <div class="design-card-title">Typography</div>
+        <div class="type-samples">
+          <% typoItems.forEach(sample => { %>
+            <div class="type-sample" style="font-family:'<%= fontForSample(sample) %>',sans-serif;font-size:<%= sample.sizePx %>px;font-weight:<%= sample.weight %>;letter-spacing:<%= sample.letterSpacing || 'normal' %>">
+              <%= sample.label %> — <%= sample.sampleText || 'The quick brown fox' %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (project.colors && project.colors.length) { %>
+      <div class="design-card">
+        <div class="design-card-title">Color Palette</div>
+        <div class="color-swatches">
+          <% project.colors.forEach(color => { %>
+            <div class="color-swatch">
+              <div class="color-swatch-box" style="background:<%= color.hex %>"></div>
+              <span class="color-swatch-label"><%= color.label %></span>
+              <span class="color-swatch-hex"><%= color.hex %></span>
+            </div>
+          <% }) %>
+        </div>
+        <% if (spacingScale && spacingScale.length) { %>
+        <div style="margin-top:24px">
+          <div class="design-card-title" style="margin-bottom:12px">Spacing</div>
+          <div class="spacing-grid">
+            <% (Array.isArray(spacingScale) ? spacingScale : []).forEach(s => { %>
+              <div class="spacing-item">
+                <div class="spacing-bar" style="height:<%= s.valuePx || s %>px"></div>
+                <span class="spacing-label"><%= s.label || s + 'px' %></span>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (project.galleryImages && project.galleryImages.length) { %>
+  <div class="project-content-section" data-anim>
+    <div class="project-content-label">Gallery</div>
+    <h2 class="project-content-title">Project Shots</h2>
+    <div class="project-gallery">
+      <% project.galleryImages.forEach(img => { %>
+        <div class="gallery-thumb" data-lightbox="<%= img.imageUrl %>">
+          <img src="<%= img.imageUrl %>" alt="<%= img.caption || project.title %>" loading="lazy" />
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (project.showImpact && project.impactMetrics && project.impactMetrics.length) { %>
+  <div class="project-content-section" data-anim>
+    <div class="project-content-label">Impact & Results</div>
+    <h2 class="project-content-title">How It Helped the Client</h2>
+    <% if (project.impactIntro) { %><p style="color:var(--color-text-secondary);margin-bottom:24px"><%= project.impactIntro %></p><% } %>
+    <div class="impact-grid">
+      <% project.impactMetrics.forEach(m => { %>
+        <div class="impact-card">
+          <div class="impact-value"><%= m.value %></div>
+          <div class="impact-label"><%= m.label %></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (project.relatedProjects && project.relatedProjects.length) { %>
+  <div class="project-content-section" data-anim>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:24px">Related Projects</h3>
+    <div class="projects-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+      <%- include('partials/projects-grid', { projects: project.relatedProjects }) %>
+    </div>
+  </div>
+  <% } %>
+
+</div>
+
+<%- include('partials/page-foot', { music, socialLinks, footerSettings: {}, extraScript: '<script src="/static/lightbox.js"></script>' }) %>

@@ -1,0 +1,22 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a class="footer-logo" href="/">
+        <% const _footerLogo = (typeof hero !== 'undefined' && hero && hero.logoUrl) || (footer && footer.logoUrl) || null; %>
+        <% if (_footerLogo) { %>
+          <img src="<%= _footerLogo %>" alt="Josh Studios" />
+        <% } else { %>
+          <span class="footer-logo-text">Josh Studios</span>
+        <% } %>
+      </a>
+      <div class="footer-socials">
+        <% socialLinks.forEach(link => { %>
+          <a class="footer-social" href="<%= link.url %>" target="_blank" rel="noopener" title="<%= link.name %>">
+            <%- getSocialIcon(link.iconKey) %>
+          </a>
+        <% }) %>
+      </div>
+      <p class="footer-copy"><%= footer.copyrightText || '© ' + new Date().getFullYear() + ' All rights reserved.' %></p>
+    </div>
+  </div>
+</footer>

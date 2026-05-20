@@ -1,0 +1,7 @@
+<section class="about section" id="about">
+  <div class="container">
+    <% (about.lines || []).forEach((line, i) => { %>
+      <p class="about-line" data-anim style="transition-delay: <%= i * 0.07 %>s"><%= line %></p>
+    <% }) %>
+  </div>
+</section>

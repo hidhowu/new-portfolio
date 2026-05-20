@@ -1,0 +1,34 @@
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-avatar">
+        <% if (hero.profileImageUrl) { %>
+          <img src="<%= hero.profileImageUrl %>" alt="Josh Studios" />
+        <% } else { %>
+          <div class="hero-avatar-placeholder">J</div>
+        <% } %>
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-heading">
+          I build <span class="hero-typed" id="hero-typed"></span><span class="hero-cursor"></span>
+          <%= hero.heading ? hero.heading.replace('I build', '').replace(/\[.*?\]/g, '') : ' that grow businesses' %>
+        </h1>
+        <% if (hero.showSubtitle !== false && hero.subtitle) { %>
+          <p class="hero-subtitle"><%= hero.subtitle %></p>
+        <% } %>
+        <div class="hero-buttons">
+          <% if (hero.primaryCta) { %>
+            <a class="btn-primary" href="<%= hero.primaryCta.href || '#contact' %>"><%= hero.primaryCta.label || 'Book a Call' %></a>
+          <% } %>
+          <% (hero.ghostCtas || []).forEach(cta => { %>
+            <a class="btn-ghost" href="<%= cta.href || '#' %>"><%= cta.label %></a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  window.__HERO_TYPING_WORDS__ = <%- JSON.stringify(hero.typingWords || ['websites','AI automations','backend solutions']) %>;
+</script>
+<script src="/static/hero-typing.js"></script>

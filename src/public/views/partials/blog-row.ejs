@@ -1,0 +1,17 @@
+<% recentPosts.forEach(post => { %>
+  <a class="blog-row" href="/blog/<%= post.slug %>">
+    <div class="blog-row-left">
+      <div class="blog-row-meta">
+        <span class="blog-tag"><%= post.category ? post.category.name : 'Article' %></span>
+        <span class="blog-date"><%= new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) %></span>
+        <span class="blog-readtime"><%= post.readMinutes %> min</span>
+      </div>
+      <h3 class="blog-row-title"><%= post.title %></h3>
+    </div>
+    <div class="blog-row-arrow">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </a>
+<% }) %>

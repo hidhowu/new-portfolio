@@ -1,0 +1,62 @@
+<%
+  const _seo = (typeof seo !== 'undefined' && seo) ? seo : {};
+  const _theme = (typeof theme !== 'undefined' && theme) ? theme : {};
+  const _pageTitle = (typeof pageTitle !== 'undefined' && pageTitle) ? pageTitle : null;
+  const _pageDesc = (typeof pageDesc !== 'undefined' && pageDesc) ? pageDesc : null;
+  const _pageImage = (typeof pageImage !== 'undefined' && pageImage) ? pageImage : null;
+  const _pagePath = (typeof pagePath !== 'undefined' && pagePath) ? pagePath : '';
+
+  const siteName = _seo.siteName || _seo.siteTitle || 'Josh Studios';
+  const finalTitle = _pageTitle ? (_pageTitle + ' | ' + siteName) : (_seo.siteTitle || siteName);
+  const finalDesc = _pageDesc || _seo.description || 'Designer & developer building thoughtful digital products.';
+  const finalImage = _pageImage || _seo.ogImageUrl || null;
+  const twitterImage = _pageImage || _seo.twitterImageUrl || finalImage;
+  const canonicalUrl = (_seo.canonicalBase && _pagePath) ? (_seo.canonicalBase.replace(/\/$/, '') + _pagePath) : (_seo.canonicalBase || null);
+  const twitterCard = _seo.twitterCard || (finalImage ? 'summary_large_image' : 'summary');
+  const _ogType = (typeof ogType !== 'undefined' && ogType) ? ogType : 'website';
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= finalTitle %></title>
+  <meta name="description" content="<%= finalDesc %>" />
+  <% if (_seo.keywords && _seo.keywords.length) { %><meta name="keywords" content="<%= _seo.keywords.join(', ') %>" /><% } %>
+  <% if (_seo.author) { %><meta name="author" content="<%= _seo.author %>" /><% } %>
+  <% if (canonicalUrl) { %><link rel="canonical" href="<%= canonicalUrl %>" /><% } %>
+  <% if (_seo.faviconUrl) { %><link rel="icon" href="<%= _seo.faviconUrl %>" /><% } %>
+  <% if (_seo.googleVerification) { %><meta name="google-site-verification" content="<%= _seo.googleVerification %>" /><% } %>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="<%= finalTitle %>" />
+  <meta property="og:description" content="<%= finalDesc %>" />
+  <meta property="og:type" content="<%= _ogType %>" />
+  <meta property="og:site_name" content="<%= siteName %>" />
+  <% if (_seo.locale) { %><meta property="og:locale" content="<%= _seo.locale %>" /><% } %>
+  <% if (canonicalUrl) { %><meta property="og:url" content="<%= canonicalUrl %>" /><% } %>
+  <% if (finalImage) { %><meta property="og:image" content="<%= finalImage %>" /><% } %>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="<%= twitterCard %>" />
+  <meta name="twitter:title" content="<%= finalTitle %>" />
+  <meta name="twitter:description" content="<%= finalDesc %>" />
+  <% if (twitterImage) { %><meta name="twitter:image" content="<%= twitterImage %>" /><% } %>
+  <% if (_seo.twitterHandle) { %><meta name="twitter:site" content="<%= _seo.twitterHandle %>" /><meta name="twitter:creator" content="<%= _seo.twitterHandle %>" /><% } %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/site.css" />
+  <% if (typeof extraStyle !== 'undefined') { %>
+  <style><%- extraStyle %></style>
+  <% } %>
+  <style>
+    :root {
+      --color-primary: <%= (_theme && _theme.primaryColor) ? _theme.primaryColor : '#1B6B2E' %>;
+      --font-primary: '<%= (_theme && _theme.fontFamily) ? _theme.fontFamily : 'DM Sans' %>', sans-serif;
+    }
+  </style>
+</head>
+<body>
+<%- include('nav', { nav: typeof nav !== 'undefined' ? nav : {} }) %>

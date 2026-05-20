@@ -1,0 +1,40 @@
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <% const _navLogo = (typeof hero !== 'undefined' && hero && hero.logoUrl) || (typeof footer !== 'undefined' && footer && footer.logoUrl) || null; %>
+      <% if (_navLogo) { %>
+        <img src="<%= _navLogo %>" alt="Josh Studios" />
+      <% } else { %>
+        <span class="nav-logo-text">Josh Studios</span>
+      <% } %>
+    </a>
+    <div class="nav-links">
+      <% const links = nav.links || [
+        {label:'Home', href:'/#home'},
+        {label:'About', href:'/#about'},
+        {label:'Services', href:'/#services'},
+        {label:'Projects', href:'/projects'},
+        {label:'Skills', href:'/#skills'},
+        {label:'Blog', href:'/blog'}
+      ]; %>
+      <% links.filter(l => l.isActive !== false).forEach(link => { %>
+        <a href="<%= link.href %>"><%= link.label %></a>
+      <% }) %>
+      <a class="nav-cta" href="/#contact">Book a Call</a>
+    </div>
+    <button class="nav-mobile-btn" id="nav-mobile-open" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <rect y="4" width="22" height="2" rx="1" fill="currentColor"/>
+        <rect y="10" width="22" height="2" rx="1" fill="currentColor"/>
+        <rect y="16" width="22" height="2" rx="1" fill="currentColor"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <button class="nav-mobile-close" id="nav-mobile-close">&times;</button>
+  <% (nav.links || links).filter(l => l.isActive !== false).forEach(link => { %>
+    <a href="<%= link.href %>"><%= link.label %></a>
+  <% }) %>
+  <a class="btn-primary" href="/#contact">Book a Call</a>
+</div>

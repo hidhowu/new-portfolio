@@ -1,0 +1,3173 @@
+<!DOCTYPE html>
+<html lang="en">
+<%
+  const _seo = (typeof seo !== 'undefined' && seo) ? seo : {};
+  const siteName = _seo.siteName || _seo.siteTitle || 'Josh Studios';
+  const finalTitle = _seo.siteTitle || siteName;
+  const finalDesc = _seo.description || 'Designer & developer building thoughtful digital products.';
+  const finalImage = _seo.ogImageUrl || null;
+  const twitterImage = _seo.twitterImageUrl || finalImage;
+  const canonicalUrl = _seo.canonicalBase || null;
+  const twitterCard = _seo.twitterCard || (finalImage ? 'summary_large_image' : 'summary');
+%>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= finalTitle %></title>
+  <meta name="description" content="<%= finalDesc %>" />
+  <% if (_seo.keywords && _seo.keywords.length) { %><meta name="keywords" content="<%= _seo.keywords.join(', ') %>" /><% } %>
+  <% if (_seo.author) { %><meta name="author" content="<%= _seo.author %>" /><% } %>
+  <% if (canonicalUrl) { %><link rel="canonical" href="<%= canonicalUrl %>" /><% } %>
+  <% if (_seo.faviconUrl) { %><link rel="icon" href="<%= _seo.faviconUrl %>" /><% } %>
+  <% if (_seo.googleVerification) { %><meta name="google-site-verification" content="<%= _seo.googleVerification %>" /><% } %>
+
+  <meta property="og:title" content="<%= finalTitle %>" />
+  <meta property="og:description" content="<%= finalDesc %>" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="<%= siteName %>" />
+  <% if (_seo.locale) { %><meta property="og:locale" content="<%= _seo.locale %>" /><% } %>
+  <% if (canonicalUrl) { %><meta property="og:url" content="<%= canonicalUrl %>" /><% } %>
+  <% if (finalImage) { %><meta property="og:image" content="<%= finalImage %>" /><% } %>
+
+  <meta name="twitter:card" content="<%= twitterCard %>" />
+  <meta name="twitter:title" content="<%= finalTitle %>" />
+  <meta name="twitter:description" content="<%= finalDesc %>" />
+  <% if (twitterImage) { %><meta name="twitter:image" content="<%= twitterImage %>" /><% } %>
+  <% if (_seo.twitterHandle) { %><meta name="twitter:site" content="<%= _seo.twitterHandle %>" /><meta name="twitter:creator" content="<%= _seo.twitterHandle %>" /><% } %>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font: 'Inter', sans-serif;
+      --color-primary: #1B6B2E;
+      --color-primary-light: #2E8B3E;
+      --color-primary-dark: #145222;
+      --color-bg: rgba(214, 255, 249, 0.165);
+      --color-surface: #FFFFFF;
+      --color-text: #1A1A1A;
+      --color-text-secondary: #6B6B6B;
+      --color-border: #E8E6E1;
+      --max-width: 1200px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #F7F6F2;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: rgba(27, 107, 46, 0.15);
+      color: var(--color-text);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+    /* ── Nav responsive ── */
+    @media (max-width: 768px) {
+      .nav-desktop-links { display: none !important; }
+      .hamburger-btn { display: flex !important; }
+    }
+    @media (min-width: 769px) {
+      .hamburger-btn { display: none !important; }
+    }
+
+    /* ── Gallery animations ── */
+    @keyframes galleryScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-25%); }
+    }
+    @keyframes galleryScrollRev {
+      from { transform: translateX(-25%); }
+      to { transform: translateX(0); }
+    }
+
+    /* ── General animations ── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes cursorBlink {
+      50% { border-color: transparent; }
+    }
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes rotateBorderSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .profile-frame { transition: transform 0.35s ease, box-shadow 0.35s ease; cursor: default; }
+    .profile-frame:hover { transform: scale(1.04); box-shadow: 0 10px 36px rgba(27,107,46,0.22); }
+    @keyframes blobMorph {
+      0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      25%       { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+      50%       { border-radius: 50% 60% 30% 40% / 30% 50% 60% 50%; }
+      75%       { border-radius: 70% 30% 50% 60% / 40% 70% 30% 60%; }
+    }
+    @keyframes blobPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(27, 107, 46, 0.35), 0 0 24px rgba(27, 107, 46, 0.15); }
+      50%       { box-shadow: 0 0 0 7px rgba(27, 107, 46, 0), 0 0 36px rgba(27, 107, 46, 0.25); }
+    }
+
+    /* ── Hover states ── */
+    .nav-link:hover { color: var(--color-primary) !important; }
+    .nav-cta-btn:hover { background: var(--color-primary-dark) !important; transform: translateY(-1px); }
+    .hero-cta-btn:hover { background: var(--color-primary-dark) !important; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(27, 107, 46, 0.25); }
+    .hero-ghost-btn:hover { background: rgba(0,0,0,0.04) !important; }
+    .service-card:hover { transform: translateY(-4px) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important; }
+    .solution-card:hover { border-color: var(--color-primary) !important; box-shadow: 0 8px 28px rgba(27,107,46,0.12) !important; transform: translateY(-6px) !important; }
+    .solution-icon { transition: color 0.2s, background 0.2s; }
+    .solution-card:hover .solution-icon { color: var(--color-primary) !important; background: rgba(27,107,46,0.08) !important; }
+    .project-img-inner { transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .project-card:hover .project-img-inner { transform: scale(1.06); }
+    .solution-link:hover { gap: 8px; }
+    .skill-tag:hover { background: var(--color-primary) !important; color: #fff !important; border-color: var(--color-primary) !important; }
+    .skill-tag:hover .skill-icon { background: rgba(255,255,255,0.2) !important; }
+    .project-card:hover { transform: translateY(-3px) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important; }
+    .project-link-btn:hover { gap: 10px !important; }
+    .view-all-btn:hover { gap: 10px !important; }
+    .play-btn:hover { transform: scale(1.06); }
+    .blog-row:hover .blog-arrow { transform: translateX(4px); }
+    .blog-row:hover h3 { color: var(--color-primary) !important; }
+    .cta-main-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .footer-social:hover { color: var(--color-primary) !important; background: rgba(27,107,46,0.08) !important; }
+
+    /* ── Gallery card hover zoom ── */
+    .gc-inner {
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+    .gc-wrap:hover .gc-inner { transform: scale(1.07); }
+
+    /* ── Hide scrollbar for horizontal scroll ── */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ── Projects grid responsive ── */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+      }
+      .projects-grid > div {
+        grid-row: auto !important;
+      }
+      .projects-grid .project-img-wrap {
+        height: auto !important;
+        min-height: 0 !important;
+        aspect-ratio: 16 / 9 !important;
+      }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .projects-grid {
+        grid-template-columns: 1fr 1fr !important;
+      }
+    }
+
+    /* ── Tweaks panel font inherit ── */
+    [data-tweaks-panel] { font-family: var(--font) !important; }
+  </style>
+</head>
+<body>
+  <script>window.__D = <%- JSON.stringify(portfolioData) %>;</script>
+  <script src="/static/music-queue.js"></script>
+  <div id="root"></div>
+
+  <!-- React -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Tweak defaults -->
+  <script>
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "fontFamily":"<%- (typeof theme !== 'undefined' && theme && theme.fontFamily) ? theme.fontFamily : 'DM Sans' %>",
+      "pattern":"<%- (typeof theme !== 'undefined' && theme && theme.patternStyle) ? theme.patternStyle : 'geometric' %>",
+      "showViewAllProjects":true,
+      "showSubtitle":<%- (typeof hero !== 'undefined' && hero && hero.showSubtitle === false) ? 'false' : 'true' %>
+    }/*EDITMODE-END*/;
+    window.TWEAK_DEFAULTS = TWEAK_DEFAULTS;
+  </script>
+
+  <!-- Components (inlined) -->
+  <!-- components/tweaks-panel.jsx -->
+  <script type="text/babel">
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "palette": ["#D97757", "#29261b", "#f6f4ef"],
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        options={['#D97757', '#2A6FDB', '#1F8A5B', '#7A5AE0']}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakColor  label="Palette" value={t.palette}
+//                        options={[['#D97757', '#29261b', '#f6f4ef'],
+//                                  ['#475569', '#0f172a', '#f1f5f9']]}
+//                        onChange={(v) => setTweak('palette', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+
+  .twk-chips{display:flex;gap:6px}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
+    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
+    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
+    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
+    0 2px 6px rgba(0,0,0,.15)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
+    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i:first-child{box-shadow:none}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    // Same-window signal so in-page listeners (deck-stage rail thumbnails)
+    // can react — the parent message only reaches the host, not peers.
+    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  // Auto-inject a rail toggle when a <deck-stage> is on the page. The
+  // toggle drives the deck's per-viewer _railVisible via window message;
+  // state is mirrored from the same localStorage key the deck reads so
+  // the control reflects reality across reloads. The mechanism is the
+  // message — authors who want custom placement can post it directly
+  // and pass noDeckControls to suppress this one.
+  const hasDeckStage = React.useMemo(
+    () => typeof document !== 'undefined' && !!document.querySelector('deck-stage'),
+    [],
+  );
+  // deck-stage enables its rail in connectedCallback, but this panel can
+  // mount before that element has upgraded. The initial read catches the
+  // common case; the listener covers mounting first. (Older deck-stage.js
+  // copies still wait for the host's __omelette_rail_enabled postMessage —
+  // same listener handles those.)
+  const [railEnabled, setRailEnabled] = React.useState(
+    () => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled,
+  );
+  React.useEffect(() => {
+    if (!hasDeckStage || railEnabled) return undefined;
+    const onMsg = (e) => {
+      if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, [hasDeckStage, railEnabled]);
+  const [railVisible, setRailVisible] = React.useState(() => {
+    try { return localStorage.getItem('deck-stage.railVisible') !== '0'; } catch (e) { return true; }
+  });
+  const toggleRail = (on) => {
+    setRailVisible(on);
+    window.postMessage({ type: '__deck_rail_visible', on }, '*');
+  };
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-noncommentable=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">
+          {children}
+          {hasDeckStage && railEnabled && !noDeckControls && (
+            <TweakSection label="Deck">
+              <TweakToggle label="Thumbnail rail" value={railVisible} onChange={toggleRail} />
+            </TweakSection>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  // Segments wrap mid-word once per-segment width runs out. The track is
+  // ~248px (280 panel − 28 body pad − 4 seg pad), each button loses 12px
+  // to its own padding, and 11.5px system-ui averages ~6.3px/char — so 2
+  // options fit ~16 chars each, 3 fit ~10. Past that (or >3 options), fall
+  // back to a dropdown rather than wrap.
+  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+  if (!fitsAsSegments) {
+    // <select> emits strings — map back to the original option value so the
+    // fallback stays type-preserving (numbers, booleans) like the segment path.
+    const resolve = (s) => {
+      const m = options.find((o) => String(typeof o === 'object' ? o.value : o) === s);
+      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    };
+    return <TweakSelect label={label} value={value} options={options}
+                        onChange={(s) => onChange(resolve(s))} />;
+  }
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+// Relative-luminance contrast pick — checkmarks drawn over a swatch need to
+// read on both #111 and #fafafa without per-option configuration. Hex input
+// only (#rgb / #rrggbb); named or rgb()/hsl() colors fall through to "light".
+function __twkIsLight(hex) {
+  const h = String(hex).replace('#', '');
+  const x = h.length === 3 ? h.replace(/./g, (c) => c + c) : h.padEnd(6, '0');
+  const n = parseInt(x.slice(0, 6), 16);
+  if (Number.isNaN(n)) return true;
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return r * 299 + g * 587 + b * 114 > 148000;
+}
+
+const __TwkCheck = ({ light }) => (
+  <svg viewBox="0 0 14 14" aria-hidden="true">
+    <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
+          strokeLinecap="round" strokeLinejoin="round"
+          stroke={light ? 'rgba(0,0,0,.78)' : '#fff'} />
+  </svg>
+);
+
+// TweakColor — curated color/palette picker. Each option is either a single
+// hex string or an array of 1-5 hex strings; the card adapts — a lone color
+// renders solid, a palette renders colors[0] as the hero (left ~2/3) with the
+// rest stacked in a sharp column on the right. onChange emits the
+// option in the shape it was passed (string stays string, array stays array).
+// Without options it falls back to the native color input for back-compat.
+function TweakColor({ label, value, options, onChange }) {
+  if (!options || !options.length) {
+    return (
+      <div className="twk-row twk-row-h">
+        <div className="twk-lbl"><span>{label}</span></div>
+        <input type="color" className="twk-swatch" value={value}
+               onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+  // Native <input type=color> emits lowercase hex per the HTML spec, so
+  // compare case-insensitively. String() guards JSON.stringify(undefined),
+  // which returns the primitive undefined (no .toLowerCase).
+  const key = (o) => String(JSON.stringify(o)).toLowerCase();
+  const cur = key(value);
+  return (
+    <TweakRow label={label}>
+      <div className="twk-chips" role="radiogroup">
+        {options.map((o, i) => {
+          const colors = Array.isArray(o) ? o : [o];
+          const [hero, ...rest] = colors;
+          const sup = rest.slice(0, 4);
+          const on = key(o) === cur;
+          return (
+            <button key={i} type="button" className="twk-chip" role="radio"
+                    aria-checked={on} data-on={on ? '1' : '0'}
+                    aria-label={colors.join(', ')} title={colors.join(' · ')}
+                    style={{ background: hero }}
+                    onClick={() => onChange(o)}>
+              {sup.length > 0 && (
+                <span>
+                  {sup.map((c, j) => <i key={j} style={{ background: c }} />)}
+                </span>
+              )}
+              {on && <__TwkCheck light={__twkIsLight(hero)} />}
+            </button>
+          );
+        })}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+  </script>
+
+  <!-- components/patterns.jsx -->
+  <script type="text/babel">
+const { useEffect, useRef, useCallback } = React;
+
+function BackgroundPattern({ pattern = 'dots', scrollY = 0 }) {
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const frameRef = useRef(null);
+  const lastDrawRef = useRef(0);
+  const isMobileRef = useRef(window.matchMedia('(pointer: coarse)').matches);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const resize = () => {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    const onMouse = (e) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
+    const onTouch = (e) => {
+      const t = e.touches[0];
+      if (t) mouseRef.current = { x: t.clientX, y: t.clientY };
+    };
+    window.addEventListener('mousemove', onMouse);
+    window.addEventListener('touchstart', onTouch, { passive: true });
+    window.addEventListener('touchmove', onTouch, { passive: true });
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouse);
+      window.removeEventListener('touchstart', onTouch);
+      window.removeEventListener('touchmove', onTouch);
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, []);
+
+  /* Continuous animation loop for all patterns */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    let running = true;
+    const loop = () => {
+      if (!running) return;
+      const now = Date.now();
+      if (now - lastDrawRef.current > 33) {
+        lastDrawRef.current = now;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        const m = mouseRef.current;
+        if (pattern === 'dots') drawDotGrid(ctx, w, h, scrollY, m, isMobileRef.current);
+        else if (pattern === 'diagonal') drawDiagonalLines(ctx, w, h, scrollY, m);
+        else if (pattern === 'noise') drawNoiseGrain(ctx, w, h);
+        else if (pattern === 'geometric') drawGeometric(ctx, w, h, scrollY, m);
+      }
+      frameRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+    return () => { running = false; };
+  }, [pattern, scrollY]);
+
+  return React.createElement('canvas', {
+    ref: canvasRef,
+    style: {
+      position: 'fixed', top: 0, left: 0,
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: 0
+    }
+  });
+}
+
+function drawDotGrid(ctx, w, h, scrollY, mouse, isMobile) {
+  const spacing = 30;
+  const baseRadius = 2.0;
+  const scrollOffset = (scrollY * 0.12) % spacing;
+  const time = Date.now() * 0.0006 + scrollY * 0.004;
+  const mx = mouse.x, my = mouse.y;
+  const influence = 180;
+
+  for (let gx = 0; gx < w + spacing; gx += spacing) {
+    for (let gy = -spacing; gy < h + spacing * 2; gy += spacing) {
+      const y = gy + scrollOffset;
+      const dx = gx - mx, dy = y - my;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const prox = Math.max(0, 1 - dist / influence);
+      const zoomR = baseRadius + prox * prox * 3.5;
+      const wave = Math.sin(time + gx * 0.015 + gy * 0.015) * 0.3;
+      const pull = prox * prox * 2;
+      const angle = Math.atan2(dy, dx);
+      const drawX = gx - Math.cos(angle) * pull;
+      const drawY = y - Math.sin(angle) * pull;
+      const r = Math.max(0.4, zoomR + wave);
+      /* Mobile: clearly visible wave gradient; Desktop: higher ambient */
+      const ambient = isMobile
+        ? 0.28 + Math.sin(time * 0.5 + gx * 0.018 + gy * 0.018) * 0.08
+        : 0.25;
+      const alpha = ambient + prox * 0.22 ;
+      ctx.beginPath();
+      ctx.arc(drawX, drawY, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(27, 94, 32, ${alpha})`;
+      ctx.fill();
+    }
+  }
+}
+
+function drawDiagonalLines(ctx, w, h, scrollY, mouse) {
+  const spacing = 24;
+  const offset = (scrollY * 0.15) % spacing;
+  const mx = mouse.x, my = mouse.y;
+  const influence = 200;
+
+  for (let i = -h; i < w + h; i += spacing) {
+    const x1 = i + offset, y1 = 0;
+    const x2 = i + offset + h, y2 = h;
+    const midX = (x1 + x2) / 2, midY = h / 2;
+    const dx = midX - mx, dy = midY - my;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const prox = Math.max(0, 1 - dist / influence);
+    const lineWidth = 0.6 + prox * 1.5;
+    const alpha = 0.05 + prox * 0.12;
+
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(27, 94, 32, ${alpha})`;
+    ctx.lineWidth = lineWidth;
+
+    /* Subtle wave distortion */
+    const wave = Math.sin(scrollY * 0.003 + i * 0.01) * 4 * prox;
+    ctx.moveTo(x1 + wave, y1);
+    ctx.lineTo(x2 - wave, y2);
+    ctx.stroke();
+  }
+}
+
+function drawNoiseGrain(ctx, w, h) {
+  const imageData = ctx.createImageData(w, h);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const v = Math.random() * 255;
+    data[i] = v; data[i + 1] = v; data[i + 2] = v;
+    data[i + 3] = Math.random() * 14;
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+function drawGeometric(ctx, w, h, scrollY, mouse) {
+  const size = 56;
+  const offset = (scrollY * 0.06) % size;
+  const mx = mouse.x, my = mouse.y;
+  const influence = 200;
+  const time = scrollY * 0.003;
+
+  for (let x = -size; x < w + size * 2; x += size) {
+    for (let y = -size; y < h + size * 2; y += size) {
+      const cx = x + offset * 0.5;
+      const cy = y + offset;
+
+      const dx = cx - mx, dy = cy - my;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const prox = Math.max(0, 1 - dist / influence);
+
+      const baseAlpha = 0.08 + prox * 0.14;
+      const lineW = 0.5 + prox * 1.2;
+      const rotation = time + prox * 0.3;
+      const scale = 0.38 + prox * 0.12;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rotation);
+      ctx.strokeStyle = `rgba(27, 94, 32, ${baseAlpha})`;
+      ctx.lineWidth = lineW;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        const px = Math.cos(a) * size * scale;
+        const py = Math.sin(a) * size * scale;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+}
+
+Object.assign(window, { BackgroundPattern });
+
+  </script>
+
+  <!-- components/navigation.jsx -->
+  <script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// Global helper: read the Book-a-Call URL from CMS CTA setting.
+window.bookACallHref = function () {
+  return (window.__D && window.__D.cta && window.__D.cta.buttonHref) || '#contact';
+};
+window.isExternalHref = function (href) {
+  return !!href && !href.startsWith('#') && !href.startsWith('/');
+};
+
+function Navigation({ scrolled }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  const _defaultLinks = [
+    { label: 'Home', href: '#home' },
+    { label: 'About', href: '#about' },
+    { label: 'Services', href: '#services' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Skills', href: '#skills' },
+    { label: 'Blog', href: '/blog' },
+  ];
+  const links = (window.__D && window.__D.nav && Array.isArray(window.__D.nav.links) && window.__D.nav.links.length
+    ? window.__D.nav.links.filter(l => l.isActive !== false).map(l => ({ label: l.label, href: l.href }))
+    : _defaultLinks);
+
+  const handleNav = (href) => {
+    setMobileOpen(false);
+    if (href.startsWith('#')) {
+      const el = document.querySelector(href);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    } else {
+      window.location.href = href;
+    }
+  };
+
+  useEffect(() => {
+    if (mobileOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  const navStyle = {
+    position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+    height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '0 clamp(20px, 4vw, 48px)',
+    background: scrolled ? 'rgba(247, 246, 242, 0.88)' : 'transparent',
+    backdropFilter: scrolled ? 'blur(16px)' : 'none',
+    WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+    borderBottom: scrolled ? '1px solid rgba(0,0,0,0.05)' : '1px solid transparent',
+    transition: 'all 0.35s ease',
+    fontFamily: 'var(--font)',
+  };
+
+  const logoStyle = {
+    display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+    textDecoration: 'none', color: 'var(--color-text)',
+  };
+
+  const desktopLinks = {
+    display: 'flex', gap: 32, alignItems: 'center',
+    listStyle: 'none', margin: 0, padding: 0,
+    position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+  };
+
+  const linkStyle = {
+    fontSize: 14, fontWeight: 500, color: 'var(--color-text-secondary)',
+    textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s',
+    letterSpacing: '0.01em',
+  };
+
+  const ctaBtnStyle = {
+    background: 'var(--color-primary)', color: '#fff',
+    border: 'none', borderRadius: 8, padding: '10px 22px',
+    fontSize: 14, fontWeight: 600, cursor: 'pointer',
+    fontFamily: 'var(--font)', transition: 'all 0.2s',
+    letterSpacing: '0.01em',
+  };
+
+  const hamburgerStyle = {
+    display: 'none', background: 'none', border: 'none',
+    cursor: 'pointer', padding: 8, position: 'relative',
+    width: 36, height: 36, flexDirection: 'column',
+    justifyContent: 'center', alignItems: 'center',
+  };
+
+  return React.createElement(React.Fragment, null,
+    React.createElement('nav', { style: navStyle },
+      React.createElement('a', {
+        style: logoStyle,
+        onClick: () => handleNav('#home'),
+      },
+        (function () {
+          const logo = window.__D && window.__D.hero && window.__D.hero.logoUrl;
+          return logo
+            ? React.createElement('img', { src: logo, alt: 'Logo', style: { height: 36, width: 'auto' } })
+            : React.createElement('span', { style: { fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' } }, 'Josh Studios');
+        })(),
+      ),
+      React.createElement('ul', {
+        className: 'nav-desktop-links', style: desktopLinks,
+      },
+        links.map(l =>
+          React.createElement('li', { key: l.href },
+            React.createElement('a', {
+              style: linkStyle, className: 'nav-link',
+              onClick: () => handleNav(l.href),
+            }, l.label)
+          )
+        ),
+      ),
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
+        (function () {
+          const href = window.bookACallHref();
+          const external = window.isExternalHref(href);
+          return React.createElement('a', {
+            href, target: external ? '_blank' : undefined, rel: external ? 'noopener' : undefined,
+            style: { ...ctaBtnStyle, display: 'inline-flex', alignItems: 'center', textDecoration: 'none' },
+            className: 'nav-cta-btn nav-desktop-links',
+            onClick: (e) => { if (href.startsWith('#')) { e.preventDefault(); handleNav(href); } },
+          }, 'Book a Call');
+        })(),
+        React.createElement('button', {
+          className: 'hamburger-btn',
+          style: hamburgerStyle,
+          onClick: () => setMobileOpen(!mobileOpen),
+          'aria-label': 'Menu',
+        },
+        React.createElement('span', {
+          style: {
+            display: 'block', width: 22, height: 2,
+            background: 'var(--color-text)',
+            transition: 'all 0.3s',
+            transform: mobileOpen ? 'rotate(45deg) translate(1px, 1px)' : 'none',
+          }
+        }),
+        React.createElement('span', {
+          style: {
+            display: 'block', width: 22, height: 2,
+            background: 'var(--color-text)',
+            marginTop: mobileOpen ? -2 : 6,
+            transition: 'all 0.3s',
+            opacity: mobileOpen ? 0 : 1,
+          }
+        }),
+        React.createElement('span', {
+          style: {
+            display: 'block', width: 22, height: 2,
+            background: 'var(--color-text)',
+            marginTop: mobileOpen ? 0 : 6,
+            transition: 'all 0.3s',
+            transform: mobileOpen ? 'rotate(-45deg) translate(1px, -1px)' : 'none',
+          }
+        }),
+        ),
+      ),
+    ),
+    // Mobile menu overlay
+    mobileOpen && React.createElement(MobileMenuContent, { links, onNavigate: handleNav, ctaBtnStyle, onClose: () => setMobileOpen(false) }),
+  );
+}
+
+// Shared map of social platform → 24x24 SVG path. Used by Footer and mobile menu.
+const SOCIAL_ICON_PATHS = {
+  github: 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z',
+  behance: 'M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988H0V5.021h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zM3 11h3.584c2.508 0 2.906-3-.312-3H3v3zm3.391 3H3v3.016h3.341c3.055 0 2.868-3.016.05-3.016z',
+  dribbble: 'M12 0C5.375 0 0 5.375 0 12s5.375 12 12 12 12-5.375 12-12S18.625 0 12 0zm7.938 5.563a10.18 10.18 0 012.25 6.375c-.328-.063-3.625-.75-6.938-.313-.063-.188-.125-.313-.188-.5-.188-.438-.375-.875-.625-1.313 3.688-1.5 5.313-3.688 5.5-4.25zM12 1.813c2.688 0 5.125 1.063 6.938 2.75-.188.5-1.625 2.563-5.188 3.875-1.625-3-3.438-5.438-3.688-5.813A10.36 10.36 0 0112 1.812z',
+  linkedin: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+  x: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
+  twitter: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
+  instagram: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z',
+  tiktok: 'M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.69a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.12z',
+  youtube: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z',
+  facebook: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
+  threads: 'M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.74-1.757-.504-.582-1.279-.88-2.305-.88h-.005c-1.06.005-2.473.36-3.349 1.738L9.99 8.586c1.179-1.86 3.119-2.93 5.382-2.937.005 0 .015 0 .021.001 1.751.005 3.106.594 4.038 1.752.846 1.05 1.281 2.546 1.296 4.444.005.067.011.187.011.32 0 .137-.005.255-.011.32-.014 1.898-.45 3.394-1.296 4.444-.931 1.158-2.286 1.748-4.038 1.752h-.021z',
+  medium: 'M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z',
+  email: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
+};
+function socialIconPath(s) {
+  const key = (s.iconKey || s.name || '').toLowerCase();
+  if (SOCIAL_ICON_PATHS[key]) return SOCIAL_ICON_PATHS[key];
+  for (const k of Object.keys(SOCIAL_ICON_PATHS)) if (key.includes(k)) return SOCIAL_ICON_PATHS[k];
+  return null;
+}
+window.SOCIAL_ICON_PATHS = SOCIAL_ICON_PATHS;
+window.socialIconPath = socialIconPath;
+
+function hexToRgba(hex, alpha) {
+  if (!hex || typeof hex !== 'string') return `rgba(247, 246, 242, ${alpha})`;
+  let h = hex.replace('#', '').trim();
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  if (h.length !== 6) return `rgba(247, 246, 242, ${alpha})`;
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function MobileMenuContent({ links, onNavigate, ctaBtnStyle, onClose }) {
+  const data = window.__D || {};
+  const project = (data.projects && data.projects[0]) || null;
+  const post = (data.recentPosts && data.recentPosts[0]) || null;
+  const aboutLines = (data.about && data.about.lines) || [];
+  const aboutBlurb = aboutLines.slice(0, 2).join(' ');
+  const socials = (data.socials || []).slice(0, 5);
+
+  const cfg = data.mobileMenu || {};
+  const bgColor = cfg.backgroundColor || '#E8F5EC';
+  const widgetCfg = Array.isArray(cfg.widgets) && cfg.widgets.length
+    ? cfg.widgets
+    : [
+        { id: 'about', enabled: true },
+        { id: 'links', enabled: true },
+        { id: 'featuredWork', enabled: true },
+        { id: 'latestBlog', enabled: true },
+        { id: 'socials', enabled: true },
+        { id: 'cta', enabled: true },
+      ];
+  const isEnabled = (id) => {
+    const w = widgetCfg.find(x => x.id === id);
+    return w ? w.enabled !== false : true;
+  };
+
+  const overlayStyle = {
+    position: 'fixed', inset: 0, zIndex: 999,
+    background: hexToRgba(bgColor, 0.98),
+    backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+    display: 'flex', flexDirection: 'column',
+    animation: 'fadeIn 0.3s ease',
+    overflowY: 'auto',
+    fontFamily: 'var(--font)',
+  };
+  const containerStyle = {
+    width: '100%', maxWidth: 520, margin: '0 auto',
+    padding: '88px 24px 40px',
+    display: 'flex', flexDirection: 'column', gap: 24,
+  };
+  const aboutCardStyle = {
+    display: 'flex', alignItems: 'center', gap: 14,
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 14, padding: 14,
+  };
+  const linkListStyle = {
+    display: 'flex', flexDirection: 'column',
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 14, overflow: 'hidden',
+  };
+  const linkRowStyle = (i, total) => ({
+    fontSize: 15, fontWeight: 500, color: 'var(--color-text)',
+    padding: '14px 16px', textDecoration: 'none', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    borderBottom: i < total - 1 ? '1px solid var(--color-border)' : 'none',
+    transition: 'background 0.15s',
+  });
+  const eyebrowStyle = {
+    fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+    textTransform: 'uppercase', color: 'var(--color-primary)',
+    marginBottom: 8,
+  };
+  const projectCardStyle = {
+    display: 'block', borderRadius: 14, overflow: 'hidden',
+    background: project && project.color ? project.color : '#1a3a5a',
+    color: '#fff', textDecoration: 'none', position: 'relative',
+    aspectRatio: '16 / 9',
+  };
+  const blogCardStyle = {
+    display: 'block', padding: 14,
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 14, textDecoration: 'none', color: 'var(--color-text)',
+  };
+  const socialRowStyle = {
+    display: 'flex', justifyContent: 'center', gap: 10,
+    padding: '4px 0',
+  };
+  const socialBtnStyle = {
+    width: 38, height: 38, borderRadius: '50%',
+    background: 'rgba(0,0,0,0.04)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 600,
+    textDecoration: 'none',
+  };
+
+  function renderWidget(id) {
+    if (id === 'about' && (aboutBlurb || data.hero)) {
+      return React.createElement('div', { key: 'about', style: aboutCardStyle },
+        React.createElement('div', {
+          style: {
+            width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+            background: 'linear-gradient(135deg, #1B6B2E 0%, #3DA55D 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#fff', fontSize: 18, fontWeight: 700,
+            overflow: 'hidden',
+          }
+        },
+          (function () {
+            const mm = data.mobileMenu || {};
+            const hero = data.hero || {};
+            const mobileImg = mm.profileImageUrl || hero.mobileProfileImageUrl || hero.profileImageUrl;
+            return mobileImg
+              ? React.createElement('img', { src: mobileImg, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' } })
+              : 'J';
+          })()
+        ),
+        React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+          React.createElement('div', { style: { fontSize: 13, fontWeight: 700, marginBottom: 2 } }, 'Hey, I\'m Josh'),
+          React.createElement('div', {
+            style: { fontSize: 12, color: 'var(--color-text-secondary)', lineHeight: 1.4,
+              overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }
+          }, aboutBlurb || 'Designer & developer building thoughtful digital products.'),
+        ),
+      );
+    }
+    if (id === 'links') {
+      return React.createElement('div', { key: 'links', style: linkListStyle },
+        links.map((l, i) =>
+          React.createElement('a', {
+            key: l.href,
+            style: linkRowStyle(i, links.length),
+            className: 'mobile-menu-link',
+            onClick: () => onNavigate(l.href),
+          },
+            React.createElement('span', null, l.label),
+            React.createElement('span', { style: { fontSize: 14, color: 'var(--color-text-secondary)' } }, '→'),
+          )
+        ),
+      );
+    }
+    if (id === 'featuredWork' && project) {
+      return React.createElement('div', { key: 'featuredWork' },
+        React.createElement('div', { style: eyebrowStyle }, 'Featured Work'),
+        React.createElement('a', {
+          href: '/projects/' + (project.slug || ''),
+          style: projectCardStyle,
+        },
+          project.imageUrl
+            ? React.createElement('img', { src: project.imageUrl, alt: project.title, style: { width: '100%', height: '100%', objectFit: 'cover' } })
+            : null,
+          React.createElement('div', {
+            style: { position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%)',
+              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+              padding: 16 }
+          },
+            React.createElement('div', { style: { fontSize: 11, fontWeight: 600, opacity: 0.9, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 } }, project.category),
+            React.createElement('div', { style: { fontSize: 18, fontWeight: 700 } }, project.title),
+          ),
+        ),
+      );
+    }
+    if (id === 'latestBlog' && post) {
+      return React.createElement('div', { key: 'latestBlog' },
+        React.createElement('div', { style: eyebrowStyle }, 'From the blog'),
+        React.createElement('a', {
+          href: '/blog/' + (post.slug || ''),
+          style: blogCardStyle,
+        },
+          React.createElement('div', { style: { fontSize: 11, fontWeight: 600, color: 'var(--color-primary)', marginBottom: 6, letterSpacing: '0.06em', textTransform: 'uppercase' } }, post.tag),
+          React.createElement('div', { style: { fontSize: 15, fontWeight: 600, lineHeight: 1.3, marginBottom: 6 } }, post.title),
+          React.createElement('div', { style: { fontSize: 12, color: 'var(--color-text-secondary)' } }, post.date + ' · ' + post.readTime + ' read'),
+        ),
+      );
+    }
+    if (id === 'socials' && socials.length > 0) {
+      return React.createElement('div', { key: 'socials', style: socialRowStyle },
+        socials.map((s, i) => {
+          const isCustom = (s.iconKey || '').startsWith('custom:');
+          const customUrl = isCustom ? s.iconKey.slice('custom:'.length) : null;
+          const path = !isCustom ? socialIconPath(s) : null;
+          return React.createElement('a', {
+            key: i, href: s.href, target: '_blank', rel: 'noopener',
+            style: socialBtnStyle, title: s.name,
+          },
+            isCustom
+              ? React.createElement('img', { src: customUrl, alt: s.name, style: { width: 16, height: 16, objectFit: 'contain' } })
+              : path
+                ? React.createElement('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor' }, React.createElement('path', { d: path }))
+                : React.createElement('span', { style: { fontSize: 11, fontWeight: 700 } }, (s.name || '?').slice(0, 2).toUpperCase())
+          );
+        })
+      );
+    }
+    if (id === 'cta') {
+      const href = window.bookACallHref();
+      const external = window.isExternalHref(href);
+      return React.createElement('a', {
+        key: 'cta',
+        href,
+        target: external ? '_blank' : undefined,
+        rel: external ? 'noopener' : undefined,
+        style: {
+          ...ctaBtnStyle, width: '100%', fontSize: 15, padding: '14px 22px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          textDecoration: 'none', boxSizing: 'border-box',
+        },
+        onClick: (e) => { if (href.startsWith('#')) { e.preventDefault(); onNavigate(href); } },
+      }, 'Book a Call');
+    }
+    return null;
+  }
+
+  return React.createElement('div', { style: overlayStyle },
+    React.createElement('div', { style: containerStyle },
+      widgetCfg.filter(w => w.enabled !== false).map(w => renderWidget(w.id)).filter(Boolean)
+    ),
+  );
+}
+
+Object.assign(window, { Navigation });
+
+  </script>
+
+  <!-- components/hero.jsx -->
+  <script type="text/babel">
+const { useEffect, useState, useRef } = React;
+
+/* ── Typing effect hook ── */
+function useTypingEffect(words, typingSpeed, deletingSpeed, pauseTime) {
+  typingSpeed = typingSpeed || 90;
+  deletingSpeed = deletingSpeed || 45;
+  pauseTime = pauseTime || 2200;
+  const [wordIdx, setWordIdx] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[wordIdx];
+    let timer;
+    if (!isDeleting) {
+      if (text.length < word.length) {
+        timer = setTimeout(() => setText(word.slice(0, text.length + 1)), typingSpeed);
+      } else {
+        timer = setTimeout(() => setIsDeleting(true), pauseTime);
+      }
+    } else {
+      if (text.length > 0) {
+        timer = setTimeout(() => setText(word.slice(0, text.length - 1)), deletingSpeed);
+      } else {
+        setIsDeleting(false);
+        setWordIdx((prev) => (prev + 1) % words.length);
+      }
+    }
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, wordIdx]);
+
+  return text;
+}
+
+/* ── Icons ── */
+const GitHubIcon = () => React.createElement('svg', {
+  width: 18, height: 18, viewBox: '0 0 24 24', fill: 'currentColor',
+}, React.createElement('path', {
+  d: 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z'
+}));
+
+const CVIcon = () => React.createElement('svg', {
+  width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none',
+  stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+}, React.createElement('path', { d: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z' }),
+  React.createElement('polyline', { points: '14 2 14 8 20 8' }),
+  React.createElement('line', { x1: 16, y1: 13, x2: 8, y2: 13 }),
+  React.createElement('line', { x1: 16, y1: 17, x2: 8, y2: 17 }),
+);
+
+const PhoneIcon = () => React.createElement('svg', {
+  width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none',
+  stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+}, React.createElement('path', {
+  d: 'M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z'
+}));
+
+/* ── Hero Component ── */
+function Hero({ showSubtitle }) {
+  const [visible, setVisible] = useState(false);
+  const typedWord = useTypingEffect((window.__D&&window.__D.hero&&window.__D.hero.typingWords)||['websites','AI automations','SEO strategies','backend solutions','SaaS platforms']);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  const scrollTo = (id) => {
+    const el = document.querySelector(id);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  const sectionStyle = {
+    display: 'flex', flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    padding: 'clamp(120px, 16vh, 180px) 24px 40px',
+    position: 'relative', zIndex: 1,
+  };
+
+  /* Square profile with spinning border */
+  const profileEntry = {
+    marginBottom: 28, flexShrink: 0,
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'translateY(0)' : 'translateY(12px)',
+    transition: 'opacity 0.7s ease, transform 0.7s ease',
+  };
+  const profileFrame = {
+    width: 148, height: 148, borderRadius: 22,
+    overflow: 'hidden', padding: 3, position: 'relative',
+  };
+  const spinnerStyle = {
+    position: 'absolute', top: '-50%', left: '-50%',
+    width: '200%', height: '200%',
+    background: 'conic-gradient(from 0deg, #1B6B2E 0deg, #3DA55D 80deg, #86efac 140deg, #ffffff 180deg, #86efac 220deg, #3DA55D 280deg, #1B6B2E 360deg)',
+    animation: 'rotateBorderSpin 3s linear infinite',
+  };
+  const imgWrapStyle = {
+    position: 'relative', zIndex: 1,
+    width: '100%', height: '100%',
+    borderRadius: 19, overflow: 'hidden',
+    background: '#1B6B2E',
+  };
+
+  const headingStyle = {
+    fontSize: 'clamp(32px, 5vw, 64px)',
+    fontWeight: 700, lineHeight: 1.15,
+    color: 'var(--color-text)', maxWidth: 800,
+    letterSpacing: '-0.03em',
+    opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)',
+    transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
+  };
+
+  const typedSpan = {
+    color: 'var(--color-primary)',
+    borderRight: '2px solid var(--color-primary)',
+    paddingRight: 2,
+    animation: 'cursorBlink 0.8s step-end infinite',
+  };
+
+  const subStyle = {
+    fontSize: 'clamp(15px, 1.8vw, 18px)',
+    color: 'var(--color-text-secondary)',
+    maxWidth: 500, margin: '16px auto 0', lineHeight: 1.6,
+    opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(16px)',
+    transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
+  };
+
+  const btnRow = {
+    display: 'flex', gap: 14, alignItems: 'center',
+    justifyContent: 'center', marginTop: 32, flexWrap: 'wrap',
+    opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(16px)',
+    transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s',
+  };
+
+  const primaryBtn = {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    background: 'var(--color-primary)', color: '#fff',
+    border: 'none', borderRadius: 10, padding: '13px 26px',
+    fontSize: 15, fontWeight: 600, cursor: 'pointer',
+    fontFamily: 'var(--font)', transition: 'all 0.25s',
+  };
+
+  const ghostBtn = {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    background: 'transparent', color: 'var(--color-text)',
+    border: 'none', borderRadius: 10, padding: '13px 18px',
+    fontSize: 15, fontWeight: 500, cursor: 'pointer',
+    fontFamily: 'var(--font)', transition: 'all 0.25s',
+  };
+
+  return React.createElement('div', { id: 'home' },
+    React.createElement('section', { style: sectionStyle },
+      /* Square profile with spinning animated border */
+      React.createElement('div', { style: profileEntry },
+        React.createElement('div', { className: 'profile-frame', style: profileFrame },
+          React.createElement('div', { style: spinnerStyle }),
+          React.createElement('div', { style: imgWrapStyle },
+            (function () {
+              const profile = window.__D && window.__D.hero && window.__D.hero.profileImageUrl;
+              return profile
+                ? React.createElement('img', {
+                    src: profile, alt: 'Profile',
+                    style: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block' },
+                  })
+                : React.createElement('div', {
+                    style: { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 56, fontWeight: 700 },
+                  }, 'J');
+            })(),
+          ),
+        ),
+      ),
+      /* Heading with typing effect */
+      React.createElement('h1', { style: headingStyle },
+        'I build ',
+        React.createElement('span', { style: typedSpan }, typedWord),
+        React.createElement('br'),
+        'that grow businesses',
+      ),
+      /* Optional subtitle */
+      showSubtitle !== false && React.createElement('p', { style: subStyle },
+        'Transforming ideas into elegant, high-performance digital solutions that drive real results.',
+      ),
+      /* CTA Buttons */
+      React.createElement('div', { style: btnRow },
+        (function () {
+          const href = window.bookACallHref();
+          const external = window.isExternalHref(href);
+          return React.createElement('a', {
+            href, target: external ? '_blank' : undefined, rel: external ? 'noopener' : undefined,
+            style: { ...primaryBtn, display: 'inline-flex', textDecoration: 'none' },
+            className: 'hero-cta-btn',
+            onClick: (e) => { if (href.startsWith('#')) { e.preventDefault(); scrollTo(href); } },
+          }, React.createElement(PhoneIcon), 'Book a Call');
+        })(),
+        (function () {
+          const socials = (window.__D && window.__D.socials) || [];
+          const findSocial = (...keys) => socials.find(s => keys.some(k => (s.iconKey || '').toLowerCase().includes(k) || (s.name || '').toLowerCase().includes(k)));
+          const primarySocial = findSocial('github') || findSocial('tiktok') || findSocial('linkedin') || findSocial('twitter', 'x') || socials[0];
+          if (!primarySocial) return null;
+          const lower = (primarySocial.iconKey || primarySocial.name || '').toLowerCase();
+          const icon = lower.includes('github') ? React.createElement(GitHubIcon) : null;
+          return React.createElement('a', {
+            key: 'social-1',
+            style: ghostBtn, className: 'hero-ghost-btn',
+            href: primarySocial.href, target: '_blank', rel: 'noopener',
+          }, icon, primarySocial.name);
+        })(),
+        (function () {
+          const resume = window.__D && window.__D.resume;
+          if (!resume || !resume.url) return null;
+          return React.createElement('a', {
+            key: 'resume',
+            style: ghostBtn, className: 'hero-ghost-btn',
+            href: resume.url, target: '_blank', rel: 'noopener',
+          }, React.createElement(CVIcon), resume.buttonLabel || 'Resume');
+        })(),
+      ),
+    ),
+  );
+}
+
+Object.assign(window, { Hero, GitHubIcon, CVIcon, PhoneIcon });
+
+  </script>
+
+  <!-- components/about.jsx -->
+  <script type="text/babel">
+const { useEffect, useRef, useState } = React;
+
+function About() {
+  const sectionRef = useRef(null);
+  const [visibleLines, setVisibleLines] = useState(new Set());
+
+  const _defaultLines = [
+    "I'm a designer & developer who thrives",
+    "at the intersection of aesthetics and engineering.",
+    "From custom websites to AI-powered automations,",
+    "I build digital products that don't just look good —",
+    "they perform, convert, and scale.",
+    "Every pixel is intentional.",
+    "Every interaction, purposeful.",
+  ];
+  const lines = (window.__D && window.__D.about && Array.isArray(window.__D.about.lines) && window.__D.about.lines.length
+    ? window.__D.about.lines
+    : _defaultLines);
+  const lineGap = (window.__D && window.__D.about && typeof window.__D.about.lineGap === 'number')
+    ? window.__D.about.lineGap : 16;
+  const scrollTriggerPct = (window.__D && window.__D.about && typeof window.__D.about.scrollTrigger === 'number')
+    ? window.__D.about.scrollTrigger : 70;
+
+  useEffect(() => {
+    const lineEls = sectionRef.current?.querySelectorAll('.about-line');
+    if (!lineEls || !lineEls.length) return;
+
+    const observers = [];
+    lineEls.forEach((el, i) => {
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisibleLines(prev => {
+              const next = new Set(prev);
+              next.add(i);
+              return next;
+            });
+            obs.unobserve(el);
+          }
+        },
+        { threshold: Math.max(0, Math.min(1, scrollTriggerPct / 100)), rootMargin: '-80px 0px' }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
+  const sectionStyle = {
+    padding: 'clamp(100px, 14vw, 200px) 24px',
+    maxWidth: 900, margin: '0 auto',
+    position: 'relative', zIndex: 1,
+  };
+
+  const labelStyle = {
+    fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
+    textTransform: 'uppercase', color: 'var(--color-primary)',
+    marginBottom: 48, display: 'flex', alignItems: 'center', gap: 12,
+  };
+
+  return React.createElement('section', { id: 'about', ref: sectionRef, style: sectionStyle },
+    React.createElement('div', { style: labelStyle },
+      React.createElement('span', {
+        style: { width: 28, height: 1.5, background: 'var(--color-primary)', display: 'block' }
+      }),
+      'About Me',
+    ),
+    React.createElement('div', { style: { position: 'relative' } },
+      lines.map((line, i) => {
+        const isVis = visibleLines.has(i);
+        return React.createElement('div', {
+          key: i,
+          className: 'about-line',
+          style: {
+            fontSize: 'clamp(24px, 3.8vw, 44px)',
+            fontWeight: 600,
+            lineHeight: 1.3,
+            color: 'var(--color-text)',
+            transform: isVis ? 'translateY(0)' : 'translateY(40px)',
+            opacity: isVis ? 1 : 0,
+            transition: `opacity 2s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.22}s, transform 2s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.22}s`,
+            letterSpacing: '-0.02em',
+            marginBottom: lineGap,
+          }
+        }, line);
+      })
+    ),
+  );
+}
+
+Object.assign(window, { About });
+
+  </script>
+
+  <!-- components/song-gallery.jsx -->
+  <script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+/* ── Song of the Month — queue-backed player ── */
+function SongOfMonth() {
+  const [state, setState] = useState(() => (window.__MusicQueue ? window.__MusicQueue.getState() : null));
+
+  useEffect(() => {
+    let unsub = null;
+    function hook() {
+      if (window.__MusicQueue) {
+        unsub = window.__MusicQueue.subscribe(setState);
+        return true;
+      }
+      return false;
+    }
+    if (!hook()) {
+      const t = setInterval(() => { if (hook()) clearInterval(t); }, 80);
+      return () => { clearInterval(t); if (unsub) unsub(); };
+    }
+    return () => { if (unsub) unsub(); };
+  }, []);
+
+  if (!state || !state.track) return null;
+  const queue = window.__MusicQueue;
+  const track = state.track;
+  const pct = state.duration > 0 ? Math.min(100, (state.position / state.duration) * 100) : 0;
+
+  function fmt(s) {
+    if (!s || !isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60); const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  const wrapperStyle = { display: 'flex', justifyContent: 'center', padding: '8px 24px 24px', position: 'relative', zIndex: 1 };
+  const cardStyle = { width: '100%', maxWidth: 480, background: 'var(--color-surface)', borderRadius: 16, padding: 'clamp(12px, 2vw, 18px)', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03)' };
+  const artStyle = { width: 48, height: 48, borderRadius: 10, flexShrink: 0, overflow: 'hidden', background: 'linear-gradient(135deg, #1B6B2E 0%, #3DA55D 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.9)', fontSize: 20 };
+  const playBtnStyle = { width: 36, height: 36, borderRadius: '50%', border: 'none', background: 'var(--color-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'transform 0.2s' };
+  const navBtnStyle = { width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'transparent', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'color 0.2s, background 0.2s' };
+  const barBg = { height: 4, background: 'var(--color-border)', borderRadius: 2, cursor: 'pointer', flex: 1 };
+
+  function seek(e) {
+    if (!queue) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    queue.seek(pct);
+  }
+
+  const prevIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor', strokeLinejoin: 'round' },
+    React.createElement('rect', { x: 5, y: 6, width: 2.5, height: 12, rx: 1.2 }),
+    React.createElement('path', { d: 'M19 6 L19 18 L9 12 Z' })
+  );
+  const nextIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor', strokeLinejoin: 'round' },
+    React.createElement('path', { d: 'M5 6 L5 18 L15 12 Z' }),
+    React.createElement('rect', { x: 16.5, y: 6, width: 2.5, height: 12, rx: 1.2 })
+  );
+  const playIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor' },
+    React.createElement('polygon', { points: '8,4 20,12 8,20' })
+  );
+  const pauseIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor' },
+    React.createElement('rect', { x: 6, y: 4, width: 4, height: 16, rx: 1 }),
+    React.createElement('rect', { x: 14, y: 4, width: 4, height: 16, rx: 1 })
+  );
+
+  return React.createElement('div', { style: wrapperStyle },
+    React.createElement('div', { style: cardStyle },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
+        React.createElement('div', { style: artStyle },
+          track.artUrl ? React.createElement('img', { src: track.artUrl, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover' } }) : '♪'
+        ),
+        React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+          React.createElement('div', { style: { fontSize: 14, fontWeight: 600, color: 'var(--color-text)', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, track.title || 'Track'),
+          React.createElement('div', { style: { fontSize: 12, color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+            track.artist || '',
+            state.total > 1 && React.createElement('span', { style: { opacity: 0.6, marginLeft: 8 } }, '· ' + (state.index + 1) + ' / ' + state.total),
+          ),
+        ),
+        state.total > 1 && React.createElement('button', { style: navBtnStyle, className: 'play-btn', onClick: () => queue && queue.prev(), 'aria-label': 'Previous' }, prevIcon),
+        React.createElement('button', { style: playBtnStyle, className: 'play-btn', onClick: () => queue && queue.toggle(), 'aria-label': state.playing ? 'Pause' : 'Play' }, state.playing ? pauseIcon : playIcon),
+        state.total > 1 && React.createElement('button', { style: navBtnStyle, className: 'play-btn', onClick: () => queue && queue.next(true), 'aria-label': 'Next' }, nextIcon),
+      ),
+      React.createElement('div', { style: { marginTop: 12 } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+          React.createElement('div', { style: barBg, onClick: seek },
+            React.createElement('div', { style: { height: '100%', borderRadius: 2, background: 'var(--color-primary)', width: pct + '%', transition: 'width 0.2s linear' } }),
+          ),
+        ),
+        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: 6 } },
+          React.createElement('span', { style: { fontSize: 11, color: 'var(--color-text-secondary)' } }, fmt(state.position)),
+          React.createElement('span', { style: { fontSize: 11, color: 'var(--color-text-secondary)' } }, fmt(state.duration)),
+        ),
+      ),
+      (track.spotifyUrl || track.youtubeMusicUrl || track.sunoUrl) && React.createElement('div', {
+        style: { display: 'flex', gap: 12, marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--color-border)', flexWrap: 'wrap' }
+      },
+        track.spotifyUrl && React.createElement('a', {
+          href: track.spotifyUrl, target: '_blank', rel: 'noopener',
+          style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, textDecoration: 'none', color: 'var(--color-text-secondary)', transition: 'color 0.2s' },
+          onMouseEnter: (e) => e.currentTarget.style.color = '#1DB954',
+          onMouseLeave: (e) => e.currentTarget.style.color = 'var(--color-text-secondary)',
+        },
+          React.createElement('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: '#1DB954' },
+            React.createElement('path', { d: 'M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12C24 5.4 18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z' })
+          ),
+          'Spotify',
+        ),
+        track.youtubeMusicUrl && React.createElement('a', {
+          href: track.youtubeMusicUrl, target: '_blank', rel: 'noopener',
+          style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, textDecoration: 'none', color: 'var(--color-text-secondary)', transition: 'color 0.2s' },
+          onMouseEnter: (e) => e.currentTarget.style.color = '#FF0033',
+          onMouseLeave: (e) => e.currentTarget.style.color = 'var(--color-text-secondary)',
+        },
+          React.createElement('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: '#FF0033' },
+            React.createElement('path', { d: 'M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z' })
+          ),
+          'YouTube Music',
+        ),
+        track.sunoUrl && React.createElement('a', {
+          href: track.sunoUrl, target: '_blank', rel: 'noopener',
+          style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, textDecoration: 'none', color: 'var(--color-text-secondary)', transition: 'color 0.2s' },
+          onMouseEnter: (e) => e.currentTarget.style.color = '#000',
+          onMouseLeave: (e) => e.currentTarget.style.color = 'var(--color-text-secondary)',
+        },
+          React.createElement('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'currentColor' },
+            React.createElement('path', { d: 'M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z' }),
+            React.createElement('path', { d: 'M10 8.5v7l6-3.5-6-3.5z' })
+          ),
+          'Suno',
+        ),
+      ),
+    ),
+  );
+}
+
+/* ── Song of the Month (legacy/unused) ── */
+function SongOfMonth_OLD_UNUSED() {
+  const music = (window.__D && window.__D.music) || {};
+  const trackUrl = music.trackUrl;
+  const title = music.title || 'Track';
+  const artist = music.artist || '';
+  const artUrl = music.artUrl;
+  // Aggressive default — always try to autoplay; setting only disables it if explicitly false.
+  const autoplayPref = music.autoplay !== false;
+
+  const audioRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(music.durationSec || 0);
+
+  function persist(extra = {}) {
+    try {
+      sessionStorage.setItem(PF_AUDIO_KEY, JSON.stringify({
+        trackUrl, position: audioRef.current ? audioRef.current.currentTime : 0,
+        playing: !!audioRef.current && !audioRef.current.paused, ...extra,
+      }));
+    } catch (_) {}
+  }
+
+  useEffect(() => {
+    if (!trackUrl) return;
+    let audio = window.__pfAudio;
+    if (!audio || audio._src !== trackUrl) {
+      if (audio) { try { audio.pause(); } catch (_) {} }
+      audio = new Audio(trackUrl);
+      audio._src = trackUrl;
+      audio.preload = 'metadata';
+      window.__pfAudio = audio;
+    }
+    audioRef.current = audio;
+
+    // Restore from session
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(PF_AUDIO_KEY) || 'null');
+      if (saved && saved.trackUrl === trackUrl) {
+        audio.currentTime = saved.position || 0;
+      }
+    } catch (_) {}
+
+    const onTime = () => { setPosition(audio.currentTime); persist(); };
+    const onMeta = () => setDuration(audio.duration || music.durationSec || 0);
+    const onEnded = () => { setPlaying(false); persist({ playing: false, position: 0 }); };
+    audio.addEventListener('timeupdate', onTime);
+    audio.addEventListener('loadedmetadata', onMeta);
+    audio.addEventListener('ended', onEnded);
+
+    // Aggressive autoplay: try immediately, fall back to first user gesture of any kind
+    if (autoplayPref) {
+      audio.play().then(() => setPlaying(true)).catch(() => {
+        setPlaying(false);
+        const kick = () => {
+          if (audio.paused) audio.play().then(() => setPlaying(true)).catch(() => {});
+          document.removeEventListener('click', kick, true);
+          document.removeEventListener('keydown', kick, true);
+          document.removeEventListener('scroll', kick, true);
+          document.removeEventListener('touchstart', kick, true);
+        };
+        document.addEventListener('click', kick, true);
+        document.addEventListener('keydown', kick, true);
+        document.addEventListener('scroll', kick, true);
+        document.addEventListener('touchstart', kick, true);
+      });
+    }
+
+    return () => {
+      audio.removeEventListener('timeupdate', onTime);
+      audio.removeEventListener('loadedmetadata', onMeta);
+      audio.removeEventListener('ended', onEnded);
+    };
+  }, [trackUrl, autoplayPref, music.durationSec]);
+
+  function toggle() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      audio.play().then(() => { setPlaying(true); persist({ playing: true }); }).catch(() => {});
+    } else {
+      audio.pause(); setPlaying(false); persist({ playing: false });
+    }
+  }
+
+  function seek(e) {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * duration;
+    setPosition(audio.currentTime);
+    persist();
+  }
+
+  function fmt(s) {
+    if (!s || !isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60); const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  const pct = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
+
+  const wrapperStyle = {
+    display: 'flex', justifyContent: 'center',
+    padding: '8px 24px 24px',
+    position: 'relative', zIndex: 1,
+  };
+  const cardStyle = {
+    width: '100%', maxWidth: 480,
+    background: 'var(--color-surface)',
+    borderRadius: 16,
+    padding: 'clamp(12px, 2vw, 18px)',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03)',
+  };
+  const artStyle = {
+    width: 48, height: 48, borderRadius: 10, flexShrink: 0, overflow: 'hidden',
+    background: 'linear-gradient(135deg, #1B6B2E 0%, #3DA55D 100%)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'rgba(255,255,255,0.9)', fontSize: 20,
+  };
+  const playBtn = {
+    width: 36, height: 36, borderRadius: '50%', border: 'none',
+    background: 'var(--color-primary)', color: '#fff',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: 'pointer', flexShrink: 0, transition: 'transform 0.2s',
+  };
+  const barBg = {
+    height: 4, background: 'var(--color-border)',
+    borderRadius: 2, cursor: 'pointer', flex: 1,
+  };
+
+  if (!trackUrl) return null;
+
+  return React.createElement('div', { style: wrapperStyle },
+    React.createElement('div', { style: cardStyle },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 14 } },
+        React.createElement('div', { style: artStyle },
+          artUrl ? React.createElement('img', { src: artUrl, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover' } }) : '♪'
+        ),
+        React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+          React.createElement('div', { style: { fontSize: 14, fontWeight: 600, color: 'var(--color-text)', marginBottom: 2 } }, title),
+          React.createElement('div', { style: { fontSize: 12, color: 'var(--color-text-secondary)' } }, artist),
+        ),
+        React.createElement('button', {
+          style: playBtn, className: 'play-btn',
+          onClick: toggle,
+        },
+          React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor' },
+            playing
+              ? React.createElement(React.Fragment, null,
+                  React.createElement('rect', { x: 6, y: 4, width: 4, height: 16, rx: 1 }),
+                  React.createElement('rect', { x: 14, y: 4, width: 4, height: 16, rx: 1 }),
+                )
+              : React.createElement('polygon', { points: '8,4 20,12 8,20' }),
+          ),
+        ),
+      ),
+      React.createElement('div', { style: { marginTop: 12 } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+          React.createElement('div', { style: barBg, onClick: seek },
+            React.createElement('div', {
+              style: { height: '100%', borderRadius: 2, background: 'var(--color-primary)',
+                width: pct + '%', transition: 'width 0.2s linear' }
+            }),
+          ),
+        ),
+        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: 6 } },
+          React.createElement('span', { style: { fontSize: 11, color: 'var(--color-text-secondary)' } }, fmt(position)),
+          React.createElement('span', { style: { fontSize: 11, color: 'var(--color-text-secondary)' } }, fmt(duration)),
+        ),
+      ),
+      (music.spotifyUrl || music.youtubeMusicUrl) && React.createElement('div', {
+        style: { display: 'flex', gap: 10, marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--color-border)', flexWrap: 'wrap' }
+      },
+        music.spotifyUrl && React.createElement('a', {
+          href: music.spotifyUrl, target: '_blank', rel: 'noopener',
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 11, fontWeight: 600, textDecoration: 'none',
+            color: 'var(--color-text-secondary)', transition: 'color 0.2s',
+          },
+          onMouseEnter: (e) => e.currentTarget.style.color = '#1DB954',
+          onMouseLeave: (e) => e.currentTarget.style.color = 'var(--color-text-secondary)',
+        },
+          React.createElement('svg', { width: 13, height: 13, viewBox: '0 0 24 24', fill: '#1DB954' },
+            React.createElement('path', { d: 'M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12C24 5.4 18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z' })
+          ),
+          'Listen on Spotify',
+        ),
+        music.youtubeMusicUrl && React.createElement('a', {
+          href: music.youtubeMusicUrl, target: '_blank', rel: 'noopener',
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 11, fontWeight: 600, textDecoration: 'none',
+            color: 'var(--color-text-secondary)', transition: 'color 0.2s',
+          },
+          onMouseEnter: (e) => e.currentTarget.style.color = '#FF0033',
+          onMouseLeave: (e) => e.currentTarget.style.color = 'var(--color-text-secondary)',
+        },
+          React.createElement('svg', { width: 13, height: 13, viewBox: '0 0 24 24', fill: '#FF0033' },
+            React.createElement('path', { d: 'M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z' })
+          ),
+          'Listen on YouTube Music',
+        ),
+      ),
+    ),
+  );
+}
+
+
+/* ── Gallery Strip ── */
+function GalleryStrip() {
+  const _defaultItems = [
+    { label: 'SaaS Dashboard', color: '#1a3a4a', row: 0 },
+    { label: 'E-commerce Store', color: '#2d1b3d', row: 0 },
+    { label: 'Landing Page', color: '#1B6B2E', row: 0 },
+    { label: 'Mobile Banking', color: '#3a2a1a', row: 0 },
+    { label: 'Portfolio Site', color: '#1a2a3d', row: 1 },
+    { label: 'Health App', color: '#2E4A3A', row: 1 },
+    { label: 'Travel Platform', color: '#3d2a2a', row: 1 },
+    { label: 'AI Dashboard', color: '#1a3a3a', row: 1 },
+    { label: 'Food Delivery', color: '#3a3a1a', row: 2 },
+    { label: 'Social Network', color: '#2a1a3a', row: 2 },
+    { label: 'Fintech App', color: '#1a2a2a', row: 2 },
+    { label: 'Real Estate', color: '#3a2a3a', row: 2 },
+  ];
+  const allItems = (window.__D && Array.isArray(window.__D.galleryItems) && window.__D.galleryItems.length)
+    ? window.__D.galleryItems
+    : _defaultItems;
+  const byRow = (r) => allItems.filter(i => (i.row ?? 0) === r);
+  const row1 = byRow(0).length ? byRow(0) : allItems.slice(0, Math.ceil(allItems.length / 3));
+  const row2 = byRow(1).length ? byRow(1) : allItems.slice(Math.ceil(allItems.length / 3), Math.ceil((allItems.length / 3) * 2));
+  const row3 = byRow(2).length ? byRow(2) : allItems.slice(Math.ceil((allItems.length / 3) * 2));
+
+  const BG = 'rgb(242, 248, 243)';
+
+  const wrapperStyle = {
+    position: 'relative', zIndex: 1,
+    padding: '20px 0 0', overflow: 'hidden',
+    maskImage: 'linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
+    maskComposite: 'intersect',
+    WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
+    WebkitMaskComposite: 'source-in',
+  };
+
+  const rotatedContainer = { transform: 'rotate(-3deg)', padding: '30px 0' };
+
+  const rowStyle = (speed, reverse) => ({
+    display: 'flex', gap: 16, marginBottom: 16,
+    animation: `galleryScroll${reverse ? 'Rev' : ''} ${speed}s linear infinite`,
+    width: 'max-content',
+  });
+
+  /* Outer clip wrapper */
+  const wrapEl = (w, h) => ({
+    width: w, height: h, borderRadius: 14, flexShrink: 0,
+    overflow: 'hidden',
+    border: '1px solid rgba(255,255,255,0.06)',
+  });
+
+  /* Inner gradient — zooms via .gc-inner CSS rule */
+  const innerEl = (color) => ({
+    width: '100%', height: '100%',
+    background: `linear-gradient(135deg, ${color} 0%, ${color}dd 50%, ${color}99 100%)`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 500,
+    fontFamily: 'var(--font)', padding: 16, textAlign: 'center',
+  });
+
+  /* 4-direction fades — cards appear to emerge from the page background */
+  const fade = (pos, size) => {
+    const dirs = {
+      left:   { left: 0, top: 0, bottom: 0, width: size,  background: `linear-gradient(to right,  ${BG}, transparent)` },
+      right:  { right: 0, top: 0, bottom: 0, width: size, background: `linear-gradient(to left,   ${BG}, transparent)` },
+      top:    { top: 0, left: 0, right: 0, height: size,  background: `linear-gradient(to bottom, ${BG}, transparent)` },
+      bottom: { bottom: 0, left: 0, right: 0, height: size, background: `linear-gradient(to top,  ${BG}, transparent)` },
+    };
+    return { position: 'absolute', ...dirs[pos], zIndex: 4, pointerEvents: 'none' };
+  };
+
+  /* Fog/grain overlay — semi-transparent veil so gallery reads as part of the background */
+  const fogStyle = {
+    position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none',
+    // background: 'rgba(247, 246, 242, 0.08)',
+    // backgroundImage: [
+    //   'radial-gradient(ellipse at 50% 0%,   rgba(247,246,242,0.25) 0%, transparent 60%)',
+    //   'radial-gradient(ellipse at 50% 100%, rgba(247,246,242,0.25) 0%, transparent 60%)',
+    // ].join(','),
+  };
+
+  const renderRow = (rowItems, speed, reverse, sizes) =>
+    React.createElement('div', { style: rowStyle(speed, reverse) },
+      [...rowItems, ...rowItems, ...rowItems, ...rowItems].map((item, i) =>
+        React.createElement('div', {
+          key: i, className: 'gc-wrap',
+          style: wrapEl(sizes[i % sizes.length].w, sizes[i % sizes.length].h),
+        },
+          item.imageUrl
+            ? React.createElement('img', {
+                className: 'gc-inner',
+                src: item.imageUrl, alt: item.label, loading: 'lazy',
+                style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' },
+              })
+            : React.createElement('div', {
+                className: 'gc-inner',
+                style: innerEl(item.color),
+              }, item.label)
+        )
+      )
+    );
+
+  return React.createElement('div', { style: wrapperStyle },
+    /* Fog overlay */
+    React.createElement('div', { style: fogStyle }),
+    /* Scrolling rows */
+    React.createElement('div', { style: rotatedContainer },
+      renderRow(row1, 45, false, [
+        { w: 280, h: 170 }, { w: 220, h: 170 }, { w: 320, h: 170 }, { w: 260, h: 170 },
+      ]),
+      renderRow(row2, 55, true, [
+        { w: 240, h: 150 }, { w: 300, h: 150 }, { w: 260, h: 150 }, { w: 280, h: 150 },
+      ]),
+      renderRow(row3, 40, false, [
+        { w: 300, h: 160 }, { w: 240, h: 160 }, { w: 280, h: 160 }, { w: 260, h: 160 },
+      ]),
+    ),
+  );
+}
+
+Object.assign(window, { SongOfMonth, GalleryStrip });
+
+  </script>
+
+  <!-- components/services.jsx -->
+  <script type="text/babel">
+const { useRef, useState, useEffect } = React;
+
+/* ── Solutions I Create ── */
+function Services() {
+  const _defaultServices = [
+    {
+      title: 'Websites',
+      items: [
+        { name: 'Figma to Website', desc: 'Pixel-perfect conversion of Figma designs into responsive, production-ready websites.' },
+        { name: 'WooCommerce', desc: 'Custom e-commerce stores with payment integration and inventory management.' },
+        { name: 'Booking Sites', desc: 'Appointment and reservation platforms with calendar and notification systems.' },
+        { name: 'Shopify Stores', desc: 'Custom Shopify themes and store setups optimized for conversions.' },
+        { name: 'Landing Pages', desc: 'High-converting landing pages for marketing campaigns and product launches.' },
+        { name: 'WordPress', desc: 'Custom WordPress themes and plugins tailored to your specific needs.' },
+      ],
+    },
+    {
+      title: 'Automation',
+      items: [
+        { name: 'n8n Workflows', desc: 'Complex automation workflows connecting your apps and services seamlessly.' },
+        { name: 'Make.com', desc: 'Visual automation scenarios for business process optimization.' },
+        { name: 'Lead Gen', desc: 'Automated lead generation funnels with CRM integration and follow-ups.' },
+        { name: 'AI Chatbots', desc: 'Intelligent conversational bots for customer support and engagement.' },
+      ],
+    },
+    {
+      title: 'Backend',
+      items: [
+        { name: 'Node.js APIs', desc: 'Scalable REST and GraphQL APIs built with Node.js and Express.' },
+        { name: 'SaaS MVPs', desc: 'Minimum viable products with auth, billing, and core feature sets.' },
+        { name: 'Payment Integration', desc: 'Stripe, PayPal, and custom payment gateway implementations.' },
+      ],
+    },
+  ];
+  const categories = (window.__D&&window.__D.services)||_defaultServices;
+
+  return React.createElement('section', {
+    id: 'services',
+    style: {
+      maxWidth: 'var(--max-width)', margin: '0 auto',
+      padding: 'clamp(60px, 10vw, 120px) 24px',
+      position: 'relative', zIndex: 1,
+    }
+  },
+    /* Header */
+    React.createElement('div', { style: { marginBottom: 48 } },
+      React.createElement('h2', {
+        style: { fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700,
+          color: 'var(--color-text)', letterSpacing: '-0.02em', margin: '0 0 8px', lineHeight: 1.15 }
+      }, 'Solutions I Create'),
+      React.createElement('p', {
+        style: { fontSize: 16, color: 'var(--color-text-secondary)', margin: 0 }
+      }, 'What I can build for you'),
+    ),
+    /* Category rows */
+    categories.map((cat, ci) =>
+      React.createElement(ServiceCategory, { key: ci, category: cat })
+    ),
+  );
+}
+
+function ServiceCategory({ category }) {
+  const scrollRef = useRef(null);
+
+  const scroll = (dir) => {
+    const el = scrollRef.current;
+    if (el) el.scrollBy({ left: dir * 260, behavior: 'smooth' });
+  };
+
+  return React.createElement('div', { style: { marginBottom: 48 } },
+    /* Category title + scroll indicator */
+    React.createElement('div', {
+      style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }
+    },
+      React.createElement('h3', {
+        style: { fontSize: 22, fontWeight: 700, color: 'var(--color-text)',
+          letterSpacing: '-0.01em', margin: 0 }
+      }, category.title),
+      React.createElement('span', {
+        style: { fontSize: 13, color: 'var(--color-text-secondary)', fontStyle: 'italic',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, userSelect: 'none' },
+        onClick: () => scroll(1),
+      }, 'scroll ',
+        React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none',
+          stroke: 'currentColor', strokeWidth: 2 },
+          React.createElement('line', { x1: 5, y1: 12, x2: 19, y2: 12 }),
+          React.createElement('polyline', { points: '14 7 19 12 14 17' }),
+        ),
+      ),
+    ),
+    /* Scrollable cards row */
+    React.createElement('div', {
+      ref: scrollRef,
+      className: 'hide-scrollbar',
+      style: {
+        display: 'flex', gap: 16, overflowX: 'auto',
+        paddingBottom: 8, paddingTop: 10, scrollSnapType: 'x mandatory',
+      }
+    },
+      category.items.map((item, i) =>
+        React.createElement('div', {
+          key: i,
+          className: 'solution-card',
+          style: {
+            flex: '0 0 220px', minHeight: 240,
+            borderRadius: 16, border: '1.5px solid var(--color-border)',
+            padding: 20, display: 'flex', flexDirection: 'column',
+            scrollSnapAlign: 'start', transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            background: 'var(--color-surface)',
+            cursor: 'default',
+          }
+        },
+          /* Icon placeholder */
+          React.createElement('div', {
+            className: 'solution-icon',
+            style: {
+              width: 40, height: 40, borderRadius: 10,
+              background: 'rgba(0,0,0,0.04)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: 20, color: 'var(--color-text-secondary)', fontSize: 18,
+            }
+          },
+            React.createElement('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none',
+              stroke: 'currentColor', strokeWidth: 1.5 },
+              React.createElement('rect', { x: 3, y: 3, width: 18, height: 18, rx: 3 }),
+              React.createElement('circle', { cx: 12, cy: 12, r: 3 }),
+            ),
+          ),
+          /* Title */
+          React.createElement('h4', {
+            style: { fontSize: 15, fontWeight: 600, color: 'var(--color-text)',
+              margin: '0 0 10px', letterSpacing: '-0.01em' }
+          }, item.name),
+          /* Description text */
+          React.createElement('p', {
+            style: { flex: 1, fontSize: 13, color: 'rgba(0,0,0,0.42)', lineHeight: 1.65, margin: 0 }
+          }, item.desc),
+          /* Link — only if a URL is set */
+          item.upworkUrl && React.createElement('a', {
+            href: item.upworkUrl, target: '_blank', rel: 'noopener',
+            style: {
+              fontSize: 13, fontWeight: 600, color: 'var(--color-primary)',
+              textDecoration: 'none', marginTop: 16,
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+            },
+            className: 'solution-link',
+          }, 'View now ',
+            React.createElement('span', null, '→'),
+          ),
+        )
+      ),
+    ),
+  );
+}
+
+Object.assign(window, { Services, ServiceCategory });
+
+  </script>
+
+  <!-- components/projects.jsx -->
+  <script type="text/babel">
+const { useState } = React;
+
+function FeaturedProjects({ showViewAll = true }) {
+  const _defaultProjects = [
+    {
+      title: 'CloudSync Pro',
+      category: 'SaaS Platform',
+      desc: 'Cloud storage and collaboration platform with real-time sync.',
+      color: '#1a3a5a',
+      tall: true,
+    },
+    {
+      title: 'Nexos AI',
+      category: 'AI Dashboard',
+      desc: 'Intelligent analytics dashboard powered by machine learning.',
+      color: '#1B6B2E',
+    },
+    {
+      title: 'InvoiceDesk',
+      category: 'Fintech App',
+      desc: 'Streamlined invoice management for small businesses.',
+      color: '#4a2a5a',
+    },
+    {
+      title: 'EcoStream',
+      category: 'Sustainability',
+      desc: 'Environmental impact tracking and reporting platform.',
+      color: '#2a5a4a',
+    },
+    {
+      title: 'HealthPulse',
+      category: 'Health Tech',
+      desc: 'Personal health monitoring and wellness tracking app.',
+      color: '#5a3a2a',
+    },
+  ];
+  const projects = (window.__D&&window.__D.projects)||_defaultProjects;
+
+  const sectionStyle = {
+    maxWidth: 'var(--max-width)', margin: '0 auto',
+    padding: 'clamp(60px, 10vw, 120px) 24px',
+    position: 'relative', zIndex: 1,
+  };
+
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateRows: 'auto auto',
+    gap: 20,
+  };
+
+  const cardBase = (project, idx) => {
+    const isTall = idx === 0;
+    return {
+      borderRadius: 16,
+      background: 'var(--color-surface)',
+      overflow: 'hidden',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03)',
+      cursor: 'pointer',
+      transition: 'transform 0.3s, box-shadow 0.3s',
+      gridRow: isTall ? '1 / 3' : undefined,
+      display: 'flex',
+      flexDirection: 'column',
+    };
+  };
+
+  const imgWrap = (tall) => ({
+    width: '100%',
+    height: tall ? '65%' : 160,
+    minHeight: tall ? 280 : 160,
+    position: 'relative', overflow: 'hidden',
+    flexShrink: 0,
+  });
+
+  const imgStyle = (color) => ({
+    position: 'absolute', inset: 0,
+    background: `linear-gradient(135deg, ${color} 0%, ${color}cc 50%, ${color}88 100%)`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  });
+
+  const contentStyle = {
+    padding: 'clamp(16px, 2vw, 24px)',
+    flex: 1, display: 'flex', flexDirection: 'column',
+  };
+
+  const linkBtn = {
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    background: 'none', border: 'none', color: 'var(--color-primary)',
+    fontSize: 13, fontWeight: 600, cursor: 'pointer',
+    fontFamily: 'var(--font)', padding: 0, marginTop: 'auto',
+    paddingTop: 12, transition: 'gap 0.2s',
+  };
+
+  const ArrowRight = () => React.createElement('svg', {
+    width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none',
+    stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+  },
+    React.createElement('line', { x1: 5, y1: 12, x2: 19, y2: 12 }),
+    React.createElement('polyline', { points: '14 7 19 12 14 17' }),
+  );
+
+  return React.createElement('section', { id: 'projects', style: sectionStyle },
+    React.createElement('div', {
+      style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+        marginBottom: 40, flexWrap: 'wrap', gap: 16 }
+    },
+      React.createElement('div', null,
+        React.createElement('div', {
+          style: { fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
+            textTransform: 'uppercase', color: 'var(--color-primary)',
+            marginBottom: 12, display: 'flex', alignItems: 'center', gap: 12 }
+        },
+          React.createElement('span', { style: { width: 28, height: 1.5, background: 'var(--color-primary)', display: 'block' } }),
+          'Featured Work',
+        ),
+        React.createElement('h2', {
+          style: { fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, color: 'var(--color-text)',
+            letterSpacing: '-0.02em', margin: 0, lineHeight: 1.15 }
+        }, 'Selected projects'),
+      ),
+      showViewAll && React.createElement('a', {
+        href: '/projects', style: { ...linkBtn, fontSize: 15, paddingTop: 0, textDecoration: 'none' },
+        className: 'view-all-btn',
+      }, 'View all projects', React.createElement(ArrowRight)),
+    ),
+    React.createElement('div', { style: gridStyle, className: 'projects-grid' },
+      projects.map((p, i) =>
+        React.createElement('a', {
+          key: i,
+          href: '/projects/' + (p.slug || ''),
+          style: { ...cardBase(p, i), textDecoration: 'none', color: 'inherit' },
+          className: 'project-card',
+        },
+          React.createElement('div', { className: 'project-img-wrap', style: imgWrap(i === 0) },
+            React.createElement('div', { className: 'project-img-inner', style: imgStyle(p.color) },
+              p.imageUrl
+                ? React.createElement('img', {
+                    src: p.imageUrl, alt: p.title, loading: 'lazy',
+                    style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }
+                  })
+                : [
+                    React.createElement('div', {
+                      key: 'sheen',
+                      style: { position: 'absolute', inset: 0,
+                        background: 'radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.1) 0%, transparent 60%)' }
+                    }),
+                    React.createElement('span', {
+                      key: 'tag',
+                      style: { color: 'rgba(255,255,255,0.3)', fontSize: 13, fontFamily: 'monospace',
+                        position: 'relative', zIndex: 1 }
+                    }, '[ ' + p.category + ' ]'),
+                  ],
+            ),
+          ),
+          React.createElement('div', { style: contentStyle },
+            React.createElement('span', {
+              style: { fontSize: 12, fontWeight: 500, color: 'var(--color-primary)',
+                textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }
+            }, p.category),
+            React.createElement('h3', {
+              style: { fontSize: 18, fontWeight: 600, color: 'var(--color-text)',
+                margin: '0 0 8px', letterSpacing: '-0.01em' }
+            }, p.title),
+            React.createElement('p', {
+              style: { fontSize: 14, color: 'var(--color-text-secondary)',
+                lineHeight: 1.5, margin: 0 }
+            }, p.desc),
+            React.createElement('span', {
+              style: { ...linkBtn, textDecoration: 'none' },
+              className: 'project-link-btn',
+            },
+              'View project', React.createElement(ArrowRight),
+            ),
+          ),
+        )
+      ),
+    ),
+  );
+}
+
+Object.assign(window, { FeaturedProjects });
+
+  </script>
+
+  <!-- components/skills-experience.jsx -->
+  <script type="text/babel">
+const { useEffect, useRef, useState } = React;
+
+/* ── Skills & Tools ── */
+function Skills() {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const _defaultSkillCats = [
+    {
+      name: 'Websites',
+      skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'WordPress', 'Elementor', 'Divi', 'Shopify', 'Tailwind'],
+    },
+    {
+      name: 'Automation',
+      skills: ['n8n', 'Make.com', 'Zapier', 'Python', 'AI/LLM', 'API Integration'],
+    },
+    {
+      name: 'Backend',
+      skills: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'REST API', 'Firebase'],
+    },
+  ];
+  const categories = (window.__D&&window.__D.skillGroups)||_defaultSkillCats;
+
+  const sectionStyle = {
+    maxWidth: 'var(--max-width)', margin: '0 auto',
+    padding: 'clamp(60px, 10vw, 120px) 24px',
+    position: 'relative', zIndex: 1,
+  };
+
+  return React.createElement('section', { id: 'skills', ref, style: sectionStyle },
+    /* Header */
+    React.createElement('h2', {
+      style: { fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, color: 'var(--color-text)',
+        letterSpacing: '-0.02em', margin: '0 0 8px', lineHeight: 1.15 }
+    }, 'Skills & Tools'),
+    React.createElement('p', {
+      style: { fontSize: 16, color: 'var(--color-text-secondary)', margin: '0 0 48px' }
+    }, 'Technologies & tools I work with'),
+
+    /* Categories */
+    categories.map((cat, ci) => {
+      const catDelay = ci * 0.15;
+      return React.createElement('div', {
+        key: ci,
+        style: {
+          marginBottom: ci < categories.length - 1 ? 40 : 0,
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(16px)',
+          transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${catDelay}s`,
+        }
+      },
+        /* Category header: green dot + name + line */
+        React.createElement('div', {
+          style: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }
+        },
+          React.createElement('span', {
+            style: { width: 10, height: 10, borderRadius: '50%',
+              background: 'var(--color-primary)', flexShrink: 0 }
+          }),
+          React.createElement('span', {
+            style: { fontSize: 17, fontWeight: 700, color: 'var(--color-text)',
+              whiteSpace: 'nowrap' }
+          }, cat.name),
+          React.createElement('span', {
+            style: { flex: 1, height: 1, background: 'var(--color-border)' }
+          }),
+        ),
+        /* Tags */
+        React.createElement('div', {
+          style: { display: 'flex', flexWrap: 'wrap', gap: 10, paddingLeft: 22 }
+        },
+          cat.skills.map((skill, si) => {
+            const skillName = typeof skill === 'string' ? skill : skill.name;
+            const skillIcon = typeof skill === 'object' && skill && skill.iconUrl ? skill.iconUrl : null;
+            return React.createElement('span', {
+              key: skillName + si,
+              className: 'skill-tag',
+              style: {
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '10px 20px', borderRadius: 10,
+                background: 'rgba(0,0,0,0.035)',
+                fontSize: 14, fontWeight: 500,
+                color: 'var(--color-text)',
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)',
+                transition: `all 0.3s ease, opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${catDelay + si * 0.03}s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${catDelay + si * 0.03}s`,
+                border: '1px solid rgba(0,0,0,0.04)',
+                cursor: 'default',
+              }
+            },
+              skillIcon
+                ? React.createElement('img', {
+                    src: skillIcon, alt: skillName,
+                    style: { width: 22, height: 22, borderRadius: 5, objectFit: 'contain', flexShrink: 0 }
+                  })
+                : React.createElement('span', {
+                    className: 'skill-icon',
+                    style: { width: 22, height: 22, borderRadius: 5,
+                      background: 'rgba(0,0,0,0.06)', flexShrink: 0, transition: 'background 0.3s' }
+                  }),
+              skillName,
+            );
+          }),
+        ),
+      );
+    }),
+  );
+}
+
+
+/* ── Work Experience ── */
+function WorkExperience() {
+  const [visibleItems, setVisibleItems] = useState(new Set());
+  const ref = useRef(null);
+
+  const _defaultExp = [
+    {
+      role: 'Senior UI/UX Designer',
+      company: 'TechCorp Global',
+      period: '2023 — Present',
+      desc: 'Leading the design system team, creating scalable component libraries and establishing design standards across 12 product teams.',
+    },
+    {
+      role: 'Frontend Developer & Designer',
+      company: 'DesignStudio Inc.',
+      period: '2021 — 2023',
+      desc: 'Built and shipped 20+ client projects ranging from marketing websites to complex SaaS dashboards, bridging design and engineering.',
+    },
+    {
+      role: 'Junior UI Designer',
+      company: 'StartupHub',
+      period: '2019 — 2021',
+      desc: 'Designed mobile and web interfaces for early-stage startups, iterating quickly through user testing and rapid prototyping.',
+    },
+  ];
+  const experiences = (window.__D&&window.__D.workExperience)||_defaultExp;
+
+  useEffect(() => {
+    const items = ref.current?.querySelectorAll('.timeline-item');
+    if (!items) return;
+    const observers = [];
+    items.forEach((el, i) => {
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisibleItems(prev => { const n = new Set(prev); n.add(i); return n; });
+            obs.unobserve(el);
+          }
+        },
+        { threshold: 0.3 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
+  const sectionStyle = {
+    maxWidth: 'var(--max-width)', margin: '0 auto',
+    padding: '0 24px clamp(60px, 10vw, 120px)',
+    position: 'relative', zIndex: 1,
+  };
+
+  return React.createElement('section', { id: 'experience', ref, style: sectionStyle },
+    React.createElement('div', {
+      style: { fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
+        textTransform: 'uppercase', color: 'var(--color-primary)',
+        marginBottom: 12, display: 'flex', alignItems: 'center', gap: 12 }
+    },
+      React.createElement('span', { style: { width: 28, height: 1.5, background: 'var(--color-primary)', display: 'block' } }),
+      'Experience',
+    ),
+    React.createElement('h2', {
+      style: { fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, color: 'var(--color-text)',
+        letterSpacing: '-0.02em', margin: '0 0 48px', lineHeight: 1.15 }
+    }, 'Work history'),
+    React.createElement('div', {
+      style: { position: 'relative', paddingLeft: 32 },
+    },
+      React.createElement('div', {
+        style: { position: 'absolute', left: 5, top: 8, bottom: 8,
+          width: 2, background: 'var(--color-border)', borderRadius: 1 }
+      }),
+      experiences.map((exp, i) => {
+        const vis = visibleItems.has(i);
+        return React.createElement('div', {
+          key: i, className: 'timeline-item',
+          style: {
+            position: 'relative', paddingBottom: i < experiences.length - 1 ? 48 : 0,
+            opacity: vis ? 1 : 0,
+            transform: vis ? 'translateX(0)' : 'translateX(-16px)',
+            transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.12}s`,
+          }
+        },
+          React.createElement('div', {
+            style: {
+              position: 'absolute', left: -32, top: 6,
+              width: 12, height: 12, borderRadius: '50%',
+              background: i === 0 ? 'var(--color-primary)' : 'var(--color-surface)',
+              border: '2px solid ' + (i === 0 ? 'var(--color-primary)' : 'var(--color-border)'),
+              zIndex: 1,
+            }
+          }),
+          React.createElement('span', {
+            style: { fontSize: 13, fontWeight: 500, color: 'var(--color-primary)', letterSpacing: '0.02em' }
+          }, exp.period),
+          React.createElement('h3', {
+            style: { fontSize: 20, fontWeight: 600, color: 'var(--color-text)',
+              margin: '6px 0 4px', letterSpacing: '-0.01em' }
+          }, exp.role),
+          React.createElement('div', {
+            style: { fontSize: 14, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 10 }
+          }, exp.company),
+          React.createElement('p', {
+            style: { fontSize: 15, color: 'var(--color-text-secondary)', lineHeight: 1.6, margin: 0, maxWidth: 560 }
+          }, exp.desc),
+        );
+      }),
+    ),
+  );
+}
+
+Object.assign(window, { Skills, WorkExperience });
+
+  </script>
+
+  <!-- components/blog-footer.jsx -->
+  <script type="text/babel">
+const { useEffect, useRef, useState } = React;
+
+/* ── Blog ── */
+function Blog() {
+  const [visibleRows, setVisibleRows] = useState(new Set());
+  const ref = useRef(null);
+
+  const _defaultPosts = [
+    { title: 'The Future of Web Design in 2026', date: 'May 12, 2026', tag: 'Design', readTime: '5 min', slug: 'the-future-of-web-design-in-2026' },
+    { title: 'Building Accessible SaaS Dashboards', date: 'Apr 28, 2026', tag: 'Development', readTime: '8 min', slug: 'building-accessible-saas-dashboards' },
+    { title: 'Design Systems That Actually Scale', date: 'Mar 15, 2026', tag: 'Systems', readTime: '6 min', slug: 'design-systems-that-actually-scale' },
+  ];
+  const posts = (window.__D&&window.__D.recentPosts)||_defaultPosts;
+
+  useEffect(() => {
+    const rows = ref.current?.querySelectorAll('.blog-row');
+    if (!rows) return;
+    const obs = [];
+    rows.forEach((el, i) => {
+      const o = new IntersectionObserver(
+        ([e]) => { if (e.isIntersecting) { setVisibleRows(p => { const n = new Set(p); n.add(i); return n; }); o.unobserve(el); } },
+        { threshold: 0.3 }
+      );
+      o.observe(el);
+      obs.push(o);
+    });
+    return () => obs.forEach(o => o.disconnect());
+  }, []);
+
+  const ArrowRight = () => React.createElement('svg', {
+    width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none',
+    stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+  },
+    React.createElement('line', { x1: 5, y1: 12, x2: 19, y2: 12 }),
+    React.createElement('polyline', { points: '14 7 19 12 14 17' }),
+  );
+
+  return React.createElement('section', {
+    id: 'blog', ref,
+    style: { maxWidth: 'var(--max-width)', margin: '0 auto',
+      padding: 'clamp(60px, 10vw, 120px) 24px', position: 'relative', zIndex: 1 }
+  },
+    React.createElement('div', {
+      style: { fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
+        textTransform: 'uppercase', color: 'var(--color-primary)',
+        marginBottom: 12, display: 'flex', alignItems: 'center', gap: 12 }
+    },
+      React.createElement('span', { style: { width: 28, height: 1.5, background: 'var(--color-primary)', display: 'block' } }),
+      'Blog',
+    ),
+    React.createElement('div', {
+      style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+        margin: '0 0 40px', flexWrap: 'wrap', gap: 16 }
+    },
+      React.createElement('h2', {
+        style: { fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, color: 'var(--color-text)',
+          letterSpacing: '-0.02em', margin: 0, lineHeight: 1.15 }
+      }, 'Latest thoughts'),
+      React.createElement('a', {
+        href: 'Blog.html',
+        className: 'view-all-btn',
+        style: { display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 15, fontWeight: 600, color: 'var(--color-primary)', textDecoration: 'none',
+          transition: 'gap 0.2s' }
+      }, 'View all articles', React.createElement(ArrowRight)),
+    ),
+    React.createElement('div', null,
+      posts.map((post, i) => {
+        const vis = visibleRows.has(i);
+        return React.createElement('a', {
+          key: i, href: '/blog/' + (post.slug || 'blog'), className: 'blog-row',
+          style: {
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '24px 0', textDecoration: 'none', gap: 16,
+            borderBottom: '1px solid var(--color-border)',
+            opacity: vis ? 1 : 0,
+            transform: vis ? 'translateY(0)' : 'translateY(12px)',
+            transition: `all 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.1}s`,
+          }
+        },
+          React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+            React.createElement('div', {
+              style: { display: 'flex', gap: 12, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }
+            },
+              React.createElement('span', {
+                style: { fontSize: 12, fontWeight: 600, color: 'var(--color-primary)',
+                  padding: '3px 10px', borderRadius: 100,
+                  background: 'rgba(27, 107, 46, 0.07)' }
+              }, post.tag),
+              React.createElement('span', { style: { fontSize: 13, color: 'var(--color-text-secondary)' } }, post.date),
+              React.createElement('span', { style: { fontSize: 13, color: 'var(--color-text-secondary)' } }, post.readTime + ' read'),
+            ),
+            React.createElement('h3', {
+              style: { fontSize: 'clamp(16px, 2.5vw, 22px)', fontWeight: 600,
+                color: 'var(--color-text)', margin: 0, letterSpacing: '-0.01em' }
+            }, post.title),
+          ),
+          React.createElement('span', {
+            style: { flexShrink: 0, color: 'var(--color-text-secondary)', transition: 'transform 0.2s' },
+            className: 'blog-arrow',
+          }, React.createElement(ArrowRight)),
+        );
+      }),
+    ),
+  );
+}
+
+
+/* ── CTA ── */
+function CTASection() {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+  const cta = (window.__D && window.__D.cta) || {};
+  const heading = cta.heading || 'Have a project in mind?';
+  const subheading = cta.subheading || "Need a website, automation, or backend solution? Let's chat and bring your vision to life.";
+  const buttonLabel = cta.buttonLabel || 'Book a Call';
+  const buttonHref = cta.buttonHref || '#contact';
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const onClick = (e) => {
+    if (buttonHref.startsWith('#')) {
+      e.preventDefault();
+      const el = document.querySelector(buttonHref);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  return React.createElement('section', {
+    id: 'contact', ref,
+    style: { maxWidth: 'var(--max-width)', margin: '0 auto',
+      padding: 'clamp(60px, 10vw, 100px) 24px', position: 'relative', zIndex: 1 }
+  },
+    React.createElement('div', {
+      style: {
+        background: 'var(--color-primary)', borderRadius: 24,
+        padding: 'clamp(40px, 6vw, 80px)', textAlign: 'center',
+        position: 'relative', overflow: 'hidden',
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.98)',
+        transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+      }
+    },
+      React.createElement('div', {
+        style: { position: 'absolute', top: -60, right: -60, width: 200, height: 200,
+          borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }
+      }),
+      React.createElement('div', {
+        style: { position: 'absolute', bottom: -40, left: -40, width: 140, height: 140,
+          borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }
+      }),
+      React.createElement('h2', {
+        style: { fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 700, color: '#fff',
+          margin: '0 0 16px', letterSpacing: '-0.02em', position: 'relative', lineHeight: 1.2 }
+      }, heading),
+      React.createElement('p', {
+        style: { fontSize: 'clamp(15px, 2vw, 18px)', color: 'rgba(255,255,255,0.8)',
+          margin: '0 auto 32px', maxWidth: 480, lineHeight: 1.6, position: 'relative' }
+      }, subheading),
+      (function () {
+        const external = window.isExternalHref(buttonHref);
+        return React.createElement('a', {
+          href: buttonHref, onClick,
+          target: external ? '_blank' : undefined,
+          rel: external ? 'noopener' : undefined,
+          style: {
+            background: '#fff', color: 'var(--color-primary)',
+            border: 'none', borderRadius: 10, padding: '14px 32px',
+            fontSize: 16, fontWeight: 600, cursor: 'pointer',
+            fontFamily: 'var(--font)', position: 'relative', transition: 'all 0.25s',
+            display: 'inline-block', textDecoration: 'none',
+          },
+          className: 'cta-main-btn',
+        }, buttonLabel);
+      })(),
+    ),
+  );
+}
+
+
+/* ── Footer ── */
+function Footer() {
+  const icons = {
+    github: 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z',
+    behance: 'M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988H0V5.021h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zM3 11h3.584c2.508 0 2.906-3-.312-3H3v3zm3.391 3H3v3.016h3.341c3.055 0 2.868-3.016.05-3.016z',
+    dribbble: 'M12 0C5.375 0 0 5.375 0 12s5.375 12 12 12 12-5.375 12-12S18.625 0 12 0zm7.938 5.563a10.18 10.18 0 012.25 6.375c-.328-.063-3.625-.75-6.938-.313-.063-.188-.125-.313-.188-.5-.188-.438-.375-.875-.625-1.313 3.688-1.5 5.313-3.688 5.5-4.25zM12 1.813c2.688 0 5.125 1.063 6.938 2.75-.188.5-1.625 2.563-5.188 3.875-1.625-3-3.438-5.438-3.688-5.813A10.36 10.36 0 0112 1.812z',
+    linkedin: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+    x: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
+    twitter: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z',
+    instagram: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z',
+    tiktok: 'M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.69a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.12z',
+    youtube: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z',
+    facebook: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
+    threads: 'M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.74-1.757-.504-.582-1.279-.88-2.305-.88h-.005c-1.06.005-2.473.36-3.349 1.738L9.99 8.586c1.179-1.86 3.119-2.93 5.382-2.937.005 0 .015 0 .021.001 1.751.005 3.106.594 4.038 1.752.846 1.05 1.281 2.546 1.296 4.444.005.067.011.187.011.32 0 .137-.005.255-.011.32-.014 1.898-.45 3.394-1.296 4.444-.931 1.158-2.286 1.748-4.038 1.752h-.021z',
+    medium: 'M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z',
+    email: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
+  };
+
+  const _defaultSocials = [
+    { name: 'GitHub', href: '#', iconKey: 'github' },
+  ];
+  const socials = (window.__D&&window.__D.socials)||_defaultSocials;
+
+  function pathFor(s) {
+    const key = (s.iconKey || s.name || '').toLowerCase();
+    if (icons[key]) return icons[key];
+    // Fuzzy match: linkedin-corp → linkedin, X (Twitter) → x, etc.
+    for (const k of Object.keys(icons)) if (key.includes(k)) return icons[k];
+    return null;
+  }
+
+  return React.createElement('footer', {
+    style: {
+      maxWidth: 'var(--max-width)', margin: '0 auto',
+      padding: '48px 24px 40px',
+      textAlign: 'center', position: 'relative', zIndex: 1,
+      borderTop: '1px solid var(--color-border)',
+    }
+  },
+    React.createElement('div', {
+      style: { display: 'flex', justifyContent: 'center', marginBottom: 20 }
+    },
+      (function () {
+        const logo = window.__D && window.__D.hero && window.__D.hero.logoUrl;
+        return logo
+          ? React.createElement('img', { src: logo, alt: 'Logo', style: { height: 36, width: 'auto' } })
+          : React.createElement('span', { style: { fontSize: 18, fontWeight: 700, color: 'var(--color-text)', letterSpacing: '-0.01em' } }, 'Josh Studios');
+      })(),
+    ),
+    React.createElement('div', {
+      style: { display: 'flex', gap: 14, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }
+    },
+      socials.map((s, idx) => {
+        const isCustom = (s.iconKey || '').startsWith('custom:');
+        const customUrl = isCustom ? s.iconKey.slice('custom:'.length) : null;
+        const path = !isCustom ? pathFor(s) : null;
+        return React.createElement('a', {
+          key: s.name + '-' + idx, href: s.href, target: '_blank', rel: 'noopener',
+          style: {
+            width: 40, height: 40, borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--color-text-secondary)',
+            transition: 'color 0.2s, background 0.2s',
+            background: 'rgba(0,0,0,0.03)',
+          },
+          className: 'footer-social',
+          title: s.name,
+        },
+          isCustom
+            ? React.createElement('img', { src: customUrl, alt: s.name, style: { width: 18, height: 18, objectFit: 'contain' } })
+            : path
+              ? React.createElement('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'currentColor' }, React.createElement('path', { d: path }))
+              : React.createElement('span', { style: { fontSize: 11, fontWeight: 600, textTransform: 'uppercase' } }, (s.name || '?').slice(0, 2)),
+        );
+      }),
+    ),
+    React.createElement('p', {
+      style: { fontSize: 13, color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.5 }
+    }, (window.__D&&window.__D.footer&&window.__D.footer.copyrightText)||'© 2026 Josh Studios. All rights reserved.'),
+  );
+}
+
+Object.assign(window, { Blog, CTASection, Footer });
+
+  </script>
+
+  <!-- components/app.jsx -->
+  <script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+function App() {
+  const tweaks = window.__TWEAKS || {};
+  const font = tweaks.fontFamily || 'DM Sans';
+  const pattern = tweaks.pattern || 'dots';
+  const showViewAll = tweaks.showViewAllProjects !== false;
+  const showSubtitle = tweaks.showSubtitle !== false;
+
+  const [scrollY, setScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrollY(window.pageYOffset);
+          setScrolled(window.pageYOffset > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--font', `'${font}', sans-serif`);
+    document.body.style.fontFamily = `'${font}', sans-serif`;
+  }, [font]);
+
+  return React.createElement('div', { style: { position: 'relative', minHeight: '100vh' } },
+    React.createElement(BackgroundPattern, { pattern, scrollY }),
+    React.createElement(Navigation, { scrolled }),
+    React.createElement('main', null,
+      /* ── Hero section (hero + song + gallery) ── */
+      React.createElement(Hero, { showSubtitle }),
+      React.createElement(SongOfMonth),
+      React.createElement(GalleryStrip),
+
+      /* ── Content sections ── */
+      React.createElement(About),
+      React.createElement(Services),
+      React.createElement(FeaturedProjects, { showViewAll }),
+      React.createElement(Skills),
+      React.createElement(WorkExperience),
+      React.createElement(Blog),
+      React.createElement(CTASection),
+      React.createElement(Footer),
+    ),
+  );
+}
+
+/* ── Tweaks Panel ── */
+function AppWithTweaks() {
+  const { useTweaks, TweaksPanel, TweakSection, TweakSelect, TweakToggle } = window;
+
+  const [tweaks, setTweak] = useTweaks(window.TWEAK_DEFAULTS);
+  window.__TWEAKS = tweaks;
+
+  return React.createElement(React.Fragment, null,
+    React.createElement(App, { key: JSON.stringify(tweaks) }),
+    React.createElement(TweaksPanel, { title: 'Customization' },
+      React.createElement(TweakSection, { label: 'Typography' },
+        React.createElement(TweakSelect, {
+          label: 'Font Family',
+          value: tweaks.fontFamily,
+          options: ['Inter', 'DM Sans', 'Space Grotesk', 'Manrope', 'Outfit', 'Sora'],
+          onChange: (v) => setTweak('fontFamily', v),
+        }),
+      ),
+      React.createElement(TweakSection, { label: 'Background' },
+        React.createElement(TweakSelect, {
+          label: 'Pattern Style',
+          value: tweaks.pattern,
+          options: [
+            { value: 'dots', label: 'Dot Grid' },
+            { value: 'diagonal', label: 'Diagonal Lines' },
+            { value: 'noise', label: 'Noise Grain' },
+            { value: 'geometric', label: 'Geometric' },
+          ],
+          onChange: (v) => setTweak('pattern', v),
+        }),
+      ),
+      React.createElement(TweakSection, { label: 'Sections' },
+        React.createElement(TweakToggle, {
+          label: 'Hero Subtitle',
+          value: tweaks.showSubtitle,
+          onChange: (v) => setTweak('showSubtitle', v),
+        }),
+        React.createElement(TweakToggle, {
+          label: 'View All Projects',
+          value: tweaks.showViewAllProjects,
+          onChange: (v) => setTweak('showViewAllProjects', v),
+        }),
+      ),
+    ),
+  );
+}
+
+Object.assign(window, { App, AppWithTweaks });
+
+  </script>
+  <!-- Mount -->
+  <script type="text/babel">
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(window.AppWithTweaks));
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<%- include('partials/page-head', {
+  theme: typeof theme !== 'undefined' ? theme : {},
+  seo: typeof seo !== 'undefined' ? seo : {},
+  nav,
+  pageTitle: 'Blog',
+  pageDesc: 'Thoughts on design, code, and the craft of shipping work that lasts.',
+  pagePath: '/blog'
+}) %>
+
+<section class="blog-hero">
+  <div class="container">
+    <div class="blog-hero-eyebrow">
+      <span class="dot"></span>
+      Blog
+    </div>
+    <h1 class="blog-hero-title">Writings & <em>Thoughts</em></h1>
+    <p class="blog-hero-sub">Thoughts on design, code, and the craft of shipping work that lasts.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="filter-pills" id="filter-pills" data-current="<%= currentCategory %>">
+      <button class="filter-pill <%= currentCategory === 'all' ? 'active' : '' %>" data-category="all">All</button>
+      <% categories.forEach(cat => { %>
+        <button class="filter-pill <%= currentCategory === cat.slug ? 'active' : '' %>" data-category="<%= cat.slug %>"><%= cat.name %></button>
+      <% }) %>
+    </div>
+
+    <% if (featuredPost) { %>
+    <div style="margin-bottom:48px" data-anim>
+      <a href="/blog/<%= featuredPost.slug %>" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);overflow:hidden;text-decoration:none">
+        <div style="aspect-ratio:5/4;background:linear-gradient(135deg,#1B6B2E,#1a3a4a);overflow:hidden">
+          <% if (featuredPost.coverImageUrl) { %>
+            <img src="<%= featuredPost.coverImageUrl %>" alt="<%= featuredPost.title %>" style="width:100%;height:100%;object-fit:cover" />
+          <% } %>
+        </div>
+        <div style="padding:40px 40px 40px 0">
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--color-primary);background:rgba(27,107,46,0.08);padding:4px 10px;border-radius:4px">Featured</span>
+          <h2 style="font-size:28px;font-weight:700;margin:16px 0 12px;letter-spacing:-0.01em"><%= featuredPost.title %></h2>
+          <p style="color:var(--color-text-secondary);font-size:15px;line-height:1.7;margin-bottom:16px"><%= featuredPost.excerpt %></p>
+          <span style="font-size:13px;color:var(--color-text-secondary)"><%= new Date(featuredPost.publishedAt || featuredPost.createdAt).toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'}) %> · <%= featuredPost.readMinutes %> min read</span>
+        </div>
+      </a>
+    </div>
+    <% } %>
+
+    <div class="blog-grid" id="blog-grid">
+      <% posts.forEach((post, i) => { %>
+        <a class="blog-card" href="/blog/<%= post.slug %>" data-anim data-category="<%= post.category ? post.category.slug : 'all' %>" style="transition-delay:<%= (i % 3) * 0.07 %>s">
+          <div class="blog-card-cover" style="background:linear-gradient(135deg,#1B6B2E,#1a3a4a)">
+            <% if (post.coverImageUrl) { %>
+              <img src="<%= post.coverImageUrl %>" alt="<%= post.title %>" loading="lazy" />
+            <% } %>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-card-tag"><%= post.category ? post.category.name : 'Article' %></div>
+            <h4 class="blog-card-title"><%= post.title %></h4>
+            <p class="blog-card-desc"><%= post.excerpt %></p>
+            <div class="blog-card-meta"><%= new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) %> · <%= post.readMinutes %> min read</div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <a class="pagination-btn <%= page <= 1 ? '' : '' %>" href="/blog?page=<%= page - 1 %>" <%= page <= 1 ? 'style="opacity:0.3;pointer-events:none"' : '' %>>←</a>
+      <% for (let p = 1; p <= totalPages; p++) { %>
+        <a class="pagination-btn <%= p === page ? 'active' : '' %>" href="/blog?page=<%= p %>"><%= p %></a>
+      <% } %>
+      <a class="pagination-btn" href="/blog?page=<%= page + 1 %>" <%= page >= totalPages ? 'style="opacity:0.3;pointer-events:none"' : '' %>>→</a>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/page-foot', { music, socialLinks, footerSettings: {}, extraScript: '<script src="/static/blog-filter.js"></script>' }) %>

@@ -1,0 +1,20 @@
+<%- include('music-player', { music: typeof music !== 'undefined' ? music : {} }) %>
+<%- include('footer', {
+  socialLinks: typeof socialLinks !== 'undefined' ? socialLinks : [],
+  footer: typeof footerSettings !== 'undefined' ? footerSettings : {}
+}) %>
+
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+</div>
+
+<script src="/static/nav.js"></script>
+<script src="/static/animations.js"></script>
+<script src="/static/lightbox.js"></script>
+<script src="/static/audio-bus.js"></script>
+<% if (typeof extraScript !== 'undefined') { %>
+  <%- extraScript %>
+<% } %>
+</body>
+</html>

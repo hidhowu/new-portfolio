@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+admin/dist/
+*.log
+.DS_Store
+Thumbs.db
+prisma/dev.db
