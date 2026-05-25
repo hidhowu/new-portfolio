@@ -7,7 +7,7 @@
     "dev:server": "nodemon --exec ts-node src/server.ts",
     "dev:admin": "cd admin && vite",
     "build": "npm run build:admin && npm run build:server",
-    "build:server": "tsc -p tsconfig.json",
+    "build:server": "tsc -p tsconfig.json && node copy-views.js",
     "build:admin": "cd admin && vite build",
     "start:prod": "node dist/server.js",
     "db:migrate": "prisma migrate dev",
