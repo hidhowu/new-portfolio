@@ -44,3 +44,35 @@ export async function changePassword(req: Request, res: Response) {
   await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
   res.json({ ok: true });
 }
+
+export async function listUsers(_req: Request, res: Response) {
+  const users = await prisma.user.findMany({
+    select: { id: true, email: true, name: true, createdAt: true, lastLoginAt: true },
+    orderBy: { createdAt: 'asc' },
+  });
+  res.json(users);
+}
+
+export async function createUser(req: Request, res: Response) {
+  const { email, name, password } = req.body;
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) throw new AppError(409, 'A user with that email already exists');
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  const user = await prisma.user.create({
+    data: { email, name, passwordHash },
+    select: { id: true, email: true, name: true, createdAt: true, lastLoginAt: true },
+  });
+  res.status(201).json(user);
+}
+
+export async function deleteUser(req: Request, res: Response) {
+  const { id } = req.params;
+  if (id === req.user!.userId) throw new AppError(400, 'You cannot delete your own account');
+
+  const count = await prisma.user.count();
+  if (count <= 1) throw new AppError(400, 'Cannot delete the last remaining user');
+
+  await prisma.user.delete({ where: { id } });
+  res.json({ ok: true });
+}

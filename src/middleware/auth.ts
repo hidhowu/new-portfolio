@@ -31,11 +31,12 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 export function issueToken(res: Response, payload: AuthPayload) {
   const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as any });
+  const isDev = env.NODE_ENV === 'development';
   res.cookie('pf_session', token, {
     httpOnly: true,
-    secure: env.COOKIE_SECURE,
+    secure: isDev ? false : env.COOKIE_SECURE,
     sameSite: 'lax',
-    domain: env.COOKIE_DOMAIN === 'localhost' ? undefined : env.COOKIE_DOMAIN,
+    domain: isDev || env.COOKIE_DOMAIN === 'localhost' ? undefined : env.COOKIE_DOMAIN,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }

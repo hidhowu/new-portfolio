@@ -4,7 +4,7 @@ import { validate } from '../../middleware/validate';
 import { requireAuth } from '../../middleware/auth';
 import { loginLimiter } from '../../middleware/rateLimit';
 import { verifyCsrf } from '../../middleware/csrf';
-import { loginSchema, changePasswordSchema } from './auth.schema';
+import { loginSchema, changePasswordSchema, createUserSchema } from './auth.schema';
 import * as ctrl from './auth.controller';
 
 const router = Router();
@@ -19,5 +19,15 @@ router.post(
   validate(changePasswordSchema),
   asyncHandler(ctrl.changePassword),
 );
+
+router.get('/users', requireAuth, asyncHandler(ctrl.listUsers));
+router.post(
+  '/users',
+  requireAuth,
+  verifyCsrf,
+  validate(createUserSchema),
+  asyncHandler(ctrl.createUser),
+);
+router.delete('/users/:id', requireAuth, verifyCsrf, asyncHandler(ctrl.deleteUser));
 
 export default router;

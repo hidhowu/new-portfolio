@@ -10,7 +10,7 @@ export function setCsrfCookie(req: Request, res: Response, next: NextFunction) {
     const token = crypto.randomBytes(32).toString('hex');
     res.cookie(CSRF_COOKIE, token, {
       httpOnly: false,
-      secure: env.COOKIE_SECURE,
+      secure: env.NODE_ENV === 'development' ? false : env.COOKIE_SECURE,
       sameSite: 'lax',
     });
   }
